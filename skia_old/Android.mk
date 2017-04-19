@@ -460,10 +460,10 @@ LOCAL_SHARED_LIBRARIES := \
 	libexpat \
 	libutils \
 	libEGL \
-	libGLESv2
+	libGLESv2 \
+	libft2
 
 LOCAL_STATIC_LIBRARIES := \
-	libft2 \
 	libpng \
 	libgif \
 	libwebp-decode \
@@ -502,9 +502,7 @@ LOCAL_EXPORT_C_INCLUDES := \
 	$(LOCAL_PATH)/include/ports \
 	$(LOCAL_PATH)/include/utils
 
-LOCAL_LDLIBS += -lpthread
-
-LOCAL_MODULE:= libskia
+LOCAL_MODULE:= libskia_old
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -513,13 +511,13 @@ include $(BUILD_SHARED_LIBRARY)
 #
 
 # benchmark (timings)
-include $(BASE_PATH)/bench/Android.mk
+#include $(BASE_PATH)/bench/Android.mk
 
 # golden-master (fidelity / regression test)
 #include $(BASE_PATH)/gm/Android.mk
 
 # unit-tests
-include $(BASE_PATH)/tests/Android.mk
+#include $(BASE_PATH)/tests/Android.mk
 
 #############################################################
 # Build the legacy skia library for playback of saved webpages

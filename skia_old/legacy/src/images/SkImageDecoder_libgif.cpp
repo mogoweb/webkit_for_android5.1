@@ -21,7 +21,7 @@ public:
     virtual Format getFormat() const {
         return kGIF_Format;
     }
-    
+
 protected:
     virtual bool onDecode(SkStream* stream, SkBitmap* bm, Mode mode);
 };
@@ -48,7 +48,7 @@ public:
         fCurrY = *fStartYPtr++;
         fDeltaY = *fDeltaYPtr++;
     }
-    
+
     int currY() const {
         SkASSERT(fStartYPtr);
         SkASSERT(fDeltaYPtr);
@@ -77,7 +77,7 @@ public:
         }
         fCurrY = y;
     }
-    
+
 private:
     const int fHeight;
     int fCurrY;
@@ -99,7 +99,11 @@ static int DecodeCallBackProc(GifFileType* fileType, GifByteType* out,
 
 void CheckFreeExtension(SavedImage* Image) {
     if (Image->ExtensionBlocks) {
+#if GIFLIB_MAJOR < 5
         FreeExtension(Image);
+#else
+        GifFreeExtensions(&Image->ExtensionBlockCount, &Image->ExtensionBlocks);
+#endif
     }
 }
 
@@ -151,7 +155,11 @@ static bool error_return(GifFileType* gif, const SkBitmap& bm,
 }
 
 bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
+#if GIFLIB_MAJOR < 5
     GifFileType* gif = DGifOpen(sk_stream, DecodeCallBackProc);
+#else
+    GifFileType* gif = DGifOpen(sk_stream, DecodeCallBackProc, NULL);
+#endif
     if (NULL == gif) {
         return error_return(gif, *bm, "DGifOpen");
     }
@@ -166,23 +174,26 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
     int width, height;
     GifRecordType recType;
     GifByteType *extData;
+#if GIFLIB_MAJOR >= 5
+    int extFunction;
+#endif
     int transpIndex = -1;   // -1 means we don't have it (yet)
-    
+
     do {
         if (DGifGetRecordType(gif, &recType) == GIF_ERROR) {
             return error_return(gif, *bm, "DGifGetRecordType");
         }
-        
+
         switch (recType) {
         case IMAGE_DESC_RECORD_TYPE: {
             if (DGifGetImageDesc(gif) == GIF_ERROR) {
                 return error_return(gif, *bm, "IMAGE_DESC_RECORD_TYPE");
             }
-            
+
             if (gif->ImageCount < 1) {    // sanity check
                 return error_return(gif, *bm, "ImageCount < 1");
             }
-                
+
             width = gif->SWidth;
             height = gif->SHeight;
             if (width <= 0 || height <= 0 ||
@@ -190,7 +201,7 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
                                            width, height)) {
                 return error_return(gif, *bm, "chooseFromOneChoice");
             }
-            
+
             if (SkImageDecoder::kDecodeBounds_Mode == mode) {
                 bm->setConfig(SkBitmap::kIndex8_Config, width, height);
                 return true;
@@ -205,14 +216,14 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
             bm->setConfig(SkBitmap::kIndex8_Config, width, height);
             SavedImage* image = &gif->SavedImages[gif->ImageCount-1];
             const GifImageDesc& desc = image->ImageDesc;
-            
+
             // check for valid descriptor
             if (   (desc.Top | desc.Left) < 0 ||
                     desc.Left + desc.Width > width ||
                     desc.Top + desc.Height > height) {
                 return error_return(gif, *bm, "TopLeft");
             }
-            
+
             // now we decode the colortable
             int colorCount = 0;
             {
@@ -226,7 +237,7 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
                 SkPMColor* colorPtr = ctable->lockColors();
                 for (int index = 0; index < colorCount; index++)
                     colorPtr[index] = SkPackARGB32(0xFF,
-                                                   cmap->Colors[index].Red, 
+                                                   cmap->Colors[index].Red,
                                                    cmap->Colors[index].Green,
                                                    cmap->Colors[index].Blue);
 
@@ -242,7 +253,7 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
                     return error_return(gif, *bm, "allocPixelRef");
                 }
             }
-            
+
             SkAutoLockPixels alp(*bm);
 
             // time to decode the scanlines
@@ -276,7 +287,7 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
                 // bump our starting address
                 scanline += desc.Top * rowBytes + desc.Left;
             }
-            
+
             // now decode each scanline
             if (gif->Image.Interlace)
             {
@@ -302,29 +313,43 @@ bool SkGIFImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* bm, Mode mode) {
             }
             goto DONE;
             } break;
-            
+
         case EXTENSION_RECORD_TYPE:
+#if GIFLIB_MAJOR < 5
             if (DGifGetExtension(gif, &temp_save.Function,
                                  &extData) == GIF_ERROR) {
+#else
+            if (DGifGetExtension(gif, &extFunction, &extData) == GIF_ERROR) {
+#endif
                 return error_return(gif, *bm, "DGifGetExtension");
             }
 
             while (extData != NULL) {
+#if GIFLIB_MAJOR < 5
                 /* Create an extension block with our data */
                 if (AddExtensionBlock(&temp_save, extData[0],
                                       &extData[1]) == GIF_ERROR) {
+#else
+                if (GifAddExtensionBlock(&gif->ExtensionBlockCount,
+                                         &gif->ExtensionBlocks,
+                                         extFunction,
+                                         extData[0],
+                                         &extData[1]) == GIF_ERROR) {
+#endif
                     return error_return(gif, *bm, "AddExtensionBlock");
                 }
                 if (DGifGetExtensionNext(gif, &extData) == GIF_ERROR) {
                     return error_return(gif, *bm, "DGifGetExtensionNext");
                 }
+#if GIFLIB_MAJOR < 5
                 temp_save.Function = 0;
+#endif
             }
             break;
-            
+
         case TERMINATE_RECORD_TYPE:
             break;
-            
+
         default:	/* Should be trapped by DGifGetRecordType */
             break;
         }

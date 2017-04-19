@@ -276,10 +276,10 @@ LOCAL_SHARED_LIBRARIES := \
 	libjpeg \
 	libutils \
 	libz \
-	libexpat
+	libexpat \
+	libft2
 
 LOCAL_STATIC_LIBRARIES := \
-	libft2 \
 	libpng \
 	libgif \
 	libwebp-decode \
@@ -307,8 +307,6 @@ ifeq ($(NO_FALLBACK_FONT),true)
 	LOCAL_CFLAGS += -DNO_FALLBACK_FONT
 endif
 
-LOCAL_LDLIBS += -lpthread
-
-LOCAL_MODULE:= libskia_legacy
+LOCAL_MODULE:= libskia_legacy_old
 
 include $(BUILD_SHARED_LIBRARY)
