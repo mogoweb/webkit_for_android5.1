@@ -52,6 +52,26 @@
 #endif /* _MS_VER */
 #endif /* WIN32 */
 
+/**
+ * xmlBuf:
+ *
+ * A buffer structure. The base of the structure is somehow compatible
+ * with struct _xmlBuffer to limit risks on application which accessed
+ * directly the input->buf->buffer structures.
+ */
+
+struct _xmlBuf {
+    xmlChar *content;		/* The buffer content UTF8 */
+    unsigned int compat_use;    /* for binary compatibility */
+    unsigned int compat_size;   /* for binary compatibility */
+    xmlBufferAllocationScheme alloc; /* The realloc method */
+    xmlChar *contentIO;		/* in IO mode we may have a different base */
+    size_t use;		        /* The buffer size used */
+    size_t size;		/* The buffer size */
+    xmlBufferPtr buffer;        /* wrapper for an old buffer */
+    int error;                  /* an error code if a failure occured */
+};
+
 /************************************************************************
  * 									*
  * 			Convenience function				*

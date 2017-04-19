@@ -34,7 +34,7 @@ LOCAL_STATIC_LIBRARIES := libxml2
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(common_SRC_FILES)
-LOCAL_C_INCLUDES += $(common_C_INCLUDES) external/libxml2/include external/icu4c/common
+LOCAL_C_INCLUDES += $(common_C_INCLUDES) external/libxml2/include external/icu/icu4c/source/common
 LOCAL_SHARED_LIBRARIES += $(common_SHARED_LIBRARIES)
 LOCAL_CFLAGS += -fvisibility=hidden
 
@@ -48,7 +48,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(common_SRC_FILES)
-LOCAL_C_INCLUDES += $(common_C_INCLUDES) external/libxml2/include external/icu4c/common
+LOCAL_C_INCLUDES += $(common_C_INCLUDES) external/libxml2/include external/icu/icu4c/source/common
 LOCAL_SHARED_LIBRARIES += $(common_SHARED_LIBRARIES)
 LOCAL_MODULE:= libxslt
 include $(BUILD_HOST_STATIC_LIBRARY)
