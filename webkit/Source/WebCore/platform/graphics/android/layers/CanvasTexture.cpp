@@ -107,8 +107,8 @@ android::Surface* CanvasTexture::nativeWindow()
         return 0;
     if (!useSurfaceTexture())
         return 0;
-    m_surfaceTexture = new android::GLConsumer(m_texture, false);
-    m_ANW = new android::Surface(m_surfaceTexture->getBufferQueue());
+    //~: m_surfaceTexture = new android::GLConsumer(m_texture, false);
+    //~: m_ANW = new android::Surface(m_surfaceTexture->getBufferQueue());
     int result = native_window_set_buffers_format(m_ANW.get(), HAL_PIXEL_FORMAT_RGBA_8888);
     GLUtils::checkSurfaceTextureError("native_window_set_buffers_format", result);
     if (result == NO_ERROR) {

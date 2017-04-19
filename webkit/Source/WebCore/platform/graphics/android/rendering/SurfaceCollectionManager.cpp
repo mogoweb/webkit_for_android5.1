@@ -212,7 +212,7 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
     // be paused.
     if (drawingBaseSurfaceReady) {
         if (!shouldDraw)
-            returnFlags |= DrawGlInfo::kStatusDraw;
+            ;//~: returnFlags |= DrawGlInfo::kStatusDraw;
         else
             requireDirtyAll |= hasRunningAnimation;
     }
@@ -221,7 +221,7 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
 
     bool requireInvoke = requireDirtyAll || !drawingBaseSurfaceReady;
     if (requireInvoke)
-        returnFlags |= DrawGlInfo::kStatusInvoke;
+        ;//~: returnFlags |= DrawGlInfo::kStatusInvoke;
 
     m_newPaintingCollection = false;
     m_previouslyScrolling = scrolling;
@@ -265,7 +265,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
             if (newCollectionHasAnimPtr)
                 *newCollectionHasAnimPtr = m_paintingCollection->hasCompositedAnimations();
             swap();
-            returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
+            //~: returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
         }
     } else if (m_drawingCollection) {
         ALOGV("preparing drawing collection %p", m_drawingCollection);
@@ -274,7 +274,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
     }
 
     if (m_paintingCollection)
-        returnFlags |= DrawGlInfo::kStatusInvoke;
+        ;//~: returnFlags |= DrawGlInfo::kStatusInvoke;
 
     if (!shouldDraw) {
         if (didCollectionSwap
@@ -286,11 +286,11 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 
             if (didCollectionSwap && m_paintingCollection)
                 m_paintingCollection->prepareGL(visibleContentRect, tryFastBlit);
-            returnFlags |= DrawGlInfo::kStatusDraw;
+            //~: returnFlags |= DrawGlInfo::kStatusDraw;
         } else {
             // current collection not ready - invoke functor in process mode
             // until either drawing or painting collection is ready
-            returnFlags |= DrawGlInfo::kStatusInvoke;
+            //~: returnFlags |= DrawGlInfo::kStatusInvoke;
         }
 
         return returnFlags;
@@ -315,7 +315,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
             m_fastSwapMode = false;
         } else {
             // drawing isn't ready, must redraw
-            returnFlags |= DrawGlInfo::kStatusInvoke;
+            //~: returnFlags |= DrawGlInfo::kStatusInvoke;
         }
 
         hasRunningAnimation = m_drawingCollection->evaluateAnimations(currentTime);
@@ -346,7 +346,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #endif
 
     if (m_drawingCollection && m_drawingCollection->drawGL(visibleContentRect))
-        returnFlags |= DrawGlInfo::kStatusDraw;
+        ;//~: returnFlags |= DrawGlInfo::kStatusDraw;
 
     ALOGV("returnFlags %d,  m_paintingCollection %d ", returnFlags, m_paintingCollection);
     return returnFlags;

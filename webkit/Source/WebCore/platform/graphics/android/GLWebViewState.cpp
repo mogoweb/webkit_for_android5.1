@@ -350,8 +350,8 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
     // Return true if we still have some images to upload.
     // TODO: upload as many textures as possible within a certain time limit
     int returnFlags = 0;
-    if (ImagesManager::instance()->prepareTextures(this))
-        returnFlags |= DrawGlInfo::kStatusDraw;
+    //~: if (ImagesManager::instance()->prepareTextures(this))
+    //~:     returnFlags |= DrawGlInfo::kStatusDraw;
 
     if (scale < MIN_SCALE_WARNING || scale > MAX_SCALE_WARNING)
         ALOGW("WARNING, scale seems corrupted after update: %e", scale);
@@ -382,12 +382,12 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 
     if (setLayersRenderingMode(nbTexturesNeeded)) {
         TilesManager::instance()->dirtyAllTiles();
-        returnFlags |= DrawGlInfo::kStatusDraw | DrawGlInfo::kStatusInvoke;
+        //~: returnFlags |= DrawGlInfo::kStatusDraw | DrawGlInfo::kStatusInvoke;
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    if (returnFlags & DrawGlInfo::kStatusDraw) {
+    if (/*returnFlags & DrawGlInfo::kStatusDraw*/true) {
         // returnFlags & kStatusDraw && empty inval region means we've inval'd everything,
         // but don't have new content. Keep redrawing full view (0,0,0,0)
         // until tile generation catches up and we swap pages.

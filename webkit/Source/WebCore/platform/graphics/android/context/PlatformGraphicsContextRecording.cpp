@@ -163,8 +163,8 @@ public:
                 continue;
             if (data->m_orderBy > toId)
                 break;
-            ALOGV("Applying operation[%d] %p->%s()", i, data->m_operation,
-                  data->m_operation->name());
+            // ALOGV("Applying operation[%d] %p->%s()", i, data->m_operation,
+            //       data->m_operation->name());
             data->m_operation->apply(context);
         }
     }
@@ -467,7 +467,7 @@ void Recording::draw(SkCanvas* canvas)
                                         op->m_canvasState, nodes[i]->m_orderBy);
                 currState = op->m_canvasState;
                 lastOperationId = nodes[i]->m_orderBy;
-                ALOGV("apply: %p->%s()", op, op->name());
+                // ALOGV("apply: %p->%s()", op, op->name());
                 op->apply(&context);
             }
             while (currState) {
@@ -1056,7 +1056,7 @@ void PlatformGraphicsContextRecording::appendDrawingOperation(
 
     WebCore::IntRect ibounds = calculateFinalBounds(untranslatedBounds);
     if (ibounds.isEmpty()) {
-        ALOGV("RECORDING: Operation %s() was clipped out", operation->name());
+        // ALOGV("RECORDING: Operation %s() was clipped out", operation->name());
         operation->~Operation();
         return;
     }
@@ -1068,15 +1068,15 @@ void PlatformGraphicsContextRecording::appendDrawingOperation(
         operation->setOpaqueRect(calculateCoveredBounds(untranslatedBounds));
     }
 #endif
-    ALOGV("RECORDING: appendOperation %p->%s() bounds " INT_RECT_FORMAT, operation, operation->name(),
-            INT_RECT_ARGS(ibounds));
+    // ALOGV("RECORDING: appendOperation %p->%s() bounds " INT_RECT_FORMAT, operation, operation->name(),
+    //         INT_RECT_ARGS(ibounds));
     RecordingData* data = new (heap()) RecordingData(operation, mRecording->recording()->m_nodeCount++);
     mRecording->recording()->m_tree.insert(ibounds, data);
 }
 
 void PlatformGraphicsContextRecording::appendStateOperation(GraphicsOperation::Operation* operation)
 {
-    ALOGV("RECORDING: appendOperation %p->%s()", operation, operation->name());
+    // ALOGV("RECORDING: appendOperation %p->%s()", operation, operation->name());
     RecordingData* data = new (heap()) RecordingData(operation, mRecording->recording()->m_nodeCount++);
     mRecordingStateStack.last().mCanvasState->adoptAndAppend(data);
 }
