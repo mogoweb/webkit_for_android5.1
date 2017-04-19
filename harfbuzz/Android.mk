@@ -56,22 +56,18 @@ LOCAL_SHARED_LIBRARIES := \
         libicuuc \
         libicui18n \
         libutils \
-        liblog
-
-LOCAL_STATIC_LIBRARIES := \
+        liblog \
         libft2
 
 LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/src \
         $(LOCAL_PATH)/src/contrib \
-        external/icu4c/common \
+        external/icu/icu4c/source/common \
         external/freetype/include
 
 ifeq ($(NO_FALLBACK_FONT),true)
         LOCAL_CFLAGS += -DNO_FALLBACK_FONT
 endif
-
-LOCAL_LDLIBS += -lpthread
 
 LOCAL_MODULE:= libharfbuzz
 
