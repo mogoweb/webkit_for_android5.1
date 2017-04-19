@@ -49,6 +49,7 @@
 #include <JNIUtility.h>
 #include <JNIHelp.h>
 #include <jni.h>
+#include <cutils/log.h>
 
 namespace android {
 

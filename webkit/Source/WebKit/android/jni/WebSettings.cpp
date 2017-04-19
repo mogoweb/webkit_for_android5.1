@@ -57,6 +57,8 @@
 #include <utils/misc.h>
 #include <wtf/text/CString.h>
 
+#include "AndroidLog.h"
+
 namespace android {
 
 static const int permissionFlags660 = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;

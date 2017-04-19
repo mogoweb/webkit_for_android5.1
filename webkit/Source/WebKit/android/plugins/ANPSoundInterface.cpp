@@ -63,12 +63,12 @@ static audio_format_t fromANPFormat(ANPSampleFormat fm) {
 
 static void callbackProc(int event, void* user, void* info) {
     ANPAudioTrack* track = reinterpret_cast<ANPAudioTrack*>(user);
-    
+
     switch (event) {
         case android::AudioTrack::EVENT_MORE_DATA: {
             ANPAudioBuffer dst;
             android::AudioTrack::Buffer* src;
-            
+
             src = reinterpret_cast<android::AudioTrack::Buffer*>(info);
             dst.bufferData      = src->raw;
             dst.channelCount    = track->mChannelCount;
@@ -93,9 +93,9 @@ static ANPAudioTrack* ANPCreateTrack(uint32_t sampleRate,
                                      int channelCount,
                                      ANPAudioCallbackProc proc,
                                      void* user) {
-    
+
     ANPAudioTrack* track = new ANPAudioTrack;
-    
+
     track->mUser = user;
     track->mProc = proc;
     track->mTrack = new android::AudioTrack(AUDIO_STREAM_MUSIC,
@@ -108,9 +108,9 @@ static ANPAudioTrack* ANPCreateTrack(uint32_t sampleRate,
                                             track,
                                             0);
     track->mChannelCount = channelCount;
-    
+
     if (track->mTrack->initCheck() != 0) {  // failure
-        delete track->mTrack;
+        //~: delete track->mTrack;
         delete track;
         track = NULL;
     }
@@ -119,7 +119,7 @@ static ANPAudioTrack* ANPCreateTrack(uint32_t sampleRate,
 
 static void ANPDeleteTrack(ANPAudioTrack* track) {
     if (track) {
-        delete track->mTrack;
+        //~: delete track->mTrack;
         delete track;
     }
 }

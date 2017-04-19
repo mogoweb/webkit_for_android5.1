@@ -53,6 +53,8 @@
 #include <wtf/StdLibExtras.h>
 #include <wtf/text/AtomicString.h>
 
+#include "AndroidLog.h"
+
 namespace android {
 
 // ----------------------------------------------------------------------------
@@ -60,7 +62,7 @@ namespace android {
 static jfieldID gJavaBridge_ObjectID;
 
 // ----------------------------------------------------------------------------
-   
+
 class JavaBridge : public TimerClient, public CookieClient, public PluginClient, public KeyGeneratorClient, public FileSystemClient
 {
 public:
@@ -169,7 +171,7 @@ JavaBridge::~JavaBridge()
         env->DeleteWeakGlobalRef(mJavaObject);
         mJavaObject = 0;
     }
-    
+
     JavaSharedClient::SetTimerClient(NULL);
     JavaSharedClient::SetCookieClient(NULL);
     JavaSharedClient::SetPluginClient(NULL);
@@ -189,7 +191,7 @@ JavaBridge::setSharedTimer(long long timemillis)
 
 void
 JavaBridge::stopSharedTimer()
-{    
+{
     JNIEnv* env = JSC::Bindings::getJNIEnv();
     AutoJObject obj = javaObject(env);
     if (!obj.get())
@@ -225,7 +227,7 @@ JavaBridge::cookies(WebCore::KURL const& url)
     const WTF::String& urlStr = url.string();
     jstring jUrlStr = wtfStringToJstring(env, urlStr);
     jstring string = (jstring)(env->CallObjectMethod(obj.get(), mCookies, jUrlStr));
-    
+
     WTF::String ret = jstringToWtfString(env, string);
     env->DeleteLocalRef(jUrlStr);
     env->DeleteLocalRef(string);
@@ -285,7 +287,7 @@ JavaBridge::setSharedTimerCallback(void (*f)())
 
     sSharedTimerFiredCallback = f;
 }
-    
+
 void JavaBridge::signalServiceFuncPtrQueue()
 {
     // In order to signal the main thread we must go through JNI. This
@@ -359,7 +361,7 @@ void JavaBridge::Constructor(JNIEnv* env, jobject obj)
 void JavaBridge::Finalize(JNIEnv* env, jobject obj)
 {
     JavaBridge* javaBridge = (JavaBridge*)
-        (env->GetIntField(obj, gJavaBridge_ObjectID));    
+        (env->GetIntField(obj, gJavaBridge_ObjectID));
     ALOG_ASSERT(javaBridge, "Finalize should not be called twice for the same java bridge!");
     ALOGV("webcore_javabridge::nativeFinalize(%p)\n", javaBridge);
     delete javaBridge;
@@ -517,7 +519,7 @@ int registerJavaBridge(JNIEnv* env)
     LOG_FATAL_IF(gJavaBridge_ObjectID == NULL, "Unable to find android/webkit/JWebCoreJavaBridge.mNativeBridge");
     env->DeleteLocalRef(javaBridge);
 
-    return jniRegisterNativeMethods(env, "android/webkit/JWebCoreJavaBridge", 
+    return jniRegisterNativeMethods(env, "android/webkit/JWebCoreJavaBridge",
                                     gWebCoreJavaBridgeMethods, NELEM(gWebCoreJavaBridgeMethods));
 }
 

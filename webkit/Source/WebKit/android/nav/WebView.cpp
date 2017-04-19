@@ -35,7 +35,7 @@
 #include "DumpLayer.h"
 #include "Frame.h"
 #include "GLWebViewState.h"
-#include "GraphicsJNI.h"
+//~: #include "GraphicsJNI.h"
 #include "HTMLInputElement.h"
 #include "IntPoint.h"
 #include "IntRect.h"
@@ -68,7 +68,7 @@
 #include <JNIUtility.h>
 #include <JNIHelp.h>
 #include <jni.h>
-#include <androidfw/KeycodeLabels.h>
+#include <android/keycodes.h>
 #include <wtf/text/AtomicString.h>
 #include <wtf/text/CString.h>
 
@@ -625,10 +625,10 @@ void floatQuadToQuadF(JNIEnv* env, const FloatQuad& nativeTextQuad,
     jobject p2 = env->GetObjectField(textQuad, m_javaGlue.m_quadFP2);
     jobject p3 = env->GetObjectField(textQuad, m_javaGlue.m_quadFP3);
     jobject p4 = env->GetObjectField(textQuad, m_javaGlue.m_quadFP4);
-    GraphicsJNI::point_to_jpointf(nativeTextQuad.p1(), env, p1);
-    GraphicsJNI::point_to_jpointf(nativeTextQuad.p2(), env, p2);
-    GraphicsJNI::point_to_jpointf(nativeTextQuad.p3(), env, p3);
-    GraphicsJNI::point_to_jpointf(nativeTextQuad.p4(), env, p4);
+    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p1(), env, p1);
+    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p2(), env, p2);
+    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p3(), env, p3);
+    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p4(), env, p4);
     env->DeleteLocalRef(p1);
     env->DeleteLocalRef(p2);
     env->DeleteLocalRef(p3);
@@ -823,7 +823,7 @@ class GLDrawFunctor : Functor {
 
         int returnFlags = (*wvInstance.*funcPtr)(localInvScreenRect, &inval, screenRect,
                 titlebarHeight, screenClip, scale, extras, shouldDraw);
-        if ((returnFlags & uirenderer::DrawGlInfo::kStatusDraw) != 0) {
+        if (false/*(returnFlags & uirenderer::DrawGlInfo::kStatusDraw) != 0*/) {
             IntRect finalInval;
             if (inval.isEmpty())
                 finalInval = screenRect;
@@ -881,7 +881,7 @@ static WebCore::IntRect jrect_to_webrect(JNIEnv* env, jobject obj)
 {
     if (obj) {
         int L, T, R, B;
-        GraphicsJNI::get_jrect(env, obj, &L, &T, &R, &B);
+        //~: GraphicsJNI::get_jrect(env, obj, &L, &T, &R, &B);
         return WebCore::IntRect(L, T, R - L, B - T);
     } else
         return WebCore::IntRect();
@@ -891,14 +891,14 @@ static SkRect jrectf_to_rect(JNIEnv* env, jobject obj)
 {
     SkRect rect = SkRect::MakeEmpty();
     if (obj)
-        GraphicsJNI::jrectf_to_rect(env, obj, &rect);
+        ;//~: GraphicsJNI::jrectf_to_rect(env, obj, &rect);
     return rect;
 }
 
 static void nativeDraw(JNIEnv *env, jobject obj, jobject canv,
         jobject visible, jint color,
         jint extras) {
-    SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, canv);
+    SkCanvas* canvas = NULL;//~: GraphicsJNI::getNativeCanvas(env, canv);
     WebView* webView = GET_NATIVE_VIEW(env, obj);
     SkRect visibleContentRect = jrectf_to_rect(env, visible);
     webView->setVisibleContentRect(visibleContentRect);
@@ -991,7 +991,7 @@ static BaseLayerAndroid* nativeGetBaseLayer(JNIEnv *env, jobject obj, jint nativ
 
 static void nativeCopyBaseContentToPicture(JNIEnv *env, jobject obj, jobject pict)
 {
-    SkPicture* picture = GraphicsJNI::getNativePicture(env, pict);
+    SkPicture* picture = NULL;//~: GraphicsJNI::getNativePicture(env, pict);
     GET_NATIVE_VIEW(env, obj)->copyBaseContentToPicture(picture);
 }
 
@@ -999,7 +999,7 @@ static jboolean nativeDumpLayerContentToPicture(JNIEnv *env, jobject obj, jint i
                                                 jstring jclassName, jint layerId, jobject pict)
 {
     bool success = false;
-    SkPicture* picture = GraphicsJNI::getNativePicture(env, pict);
+    SkPicture* picture = NULL;//~: GraphicsJNI::getNativePicture(env, pict);
     std::string classname = jstringToStdString(env, jclassName);
     BaseLayerAndroid* baseLayer = reinterpret_cast<WebView*>(instance)->getBaseLayer();
     LayerAndroid* layer = baseLayer->findById(layerId);
@@ -1227,9 +1227,9 @@ static int nativeScrollableLayer(JNIEnv* env, jobject jwebview, jint nativeView,
     SkIRect nativeRect, nativeBounds;
     int id = webview->scrollableLayer(x, y, &nativeRect, &nativeBounds);
     if (rect)
-        GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
+        ;//~: GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
     if (bounds)
-        GraphicsJNI::irect_to_jrect(nativeBounds, env, bounds);
+        ;//~: GraphicsJNI::irect_to_jrect(nativeBounds, env, bounds);
     return id;
 }
 
@@ -1301,7 +1301,7 @@ static jint nativeGetHandleLayerId(JNIEnv *env, jobject obj, jint nativeView,
     int layerId = webview->getHandleLayerId((SelectText::HandleId) handleIndex,
             nativePoint, nativeTextQuad);
     if (cursorPoint)
-        GraphicsJNI::ipoint_to_jpoint(nativePoint, env, cursorPoint);
+        ;//~: GraphicsJNI::ipoint_to_jpoint(nativePoint, env, cursorPoint);
     if (textQuad)
         webview->floatQuadToQuadF(env, nativeTextQuad, textQuad);
     return layerId;
@@ -1312,9 +1312,9 @@ static void nativeMapLayerRect(JNIEnv *env, jobject obj, jint nativeView,
 {
     WebView* webview = reinterpret_cast<WebView*>(nativeView);
     SkIRect nativeRect;
-    GraphicsJNI::jrect_to_irect(env, rect, &nativeRect);
+    //~: GraphicsJNI::jrect_to_irect(env, rect, &nativeRect);
     webview->mapLayerRect(layerId, nativeRect);
-    GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
+    //~: GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
 }
 
 static jint nativeSetHwAccelerated(JNIEnv *env, jobject obj, jint nativeView,
@@ -1329,9 +1329,9 @@ static void nativeFindMaxVisibleRect(JNIEnv *env, jobject obj, jint nativeView,
 {
     WebView* webview = reinterpret_cast<WebView*>(nativeView);
     SkIRect nativeRect;
-    GraphicsJNI::jrect_to_irect(env, visibleContentRect, &nativeRect);
+    //~: GraphicsJNI::jrect_to_irect(env, visibleContentRect, &nativeRect);
     webview->findMaxVisibleRect(movingLayerId, nativeRect);
-    GraphicsJNI::irect_to_jrect(nativeRect, env, visibleContentRect);
+    //~: GraphicsJNI::irect_to_jrect(nativeRect, env, visibleContentRect);
 }
 
 static bool nativeIsHandleLeft(JNIEnv *env, jobject obj, jint nativeView,

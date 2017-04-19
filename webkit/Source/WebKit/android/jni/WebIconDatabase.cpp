@@ -29,7 +29,7 @@
 #include "WebIconDatabase.h"
 
 #include "FileSystem.h"
-#include "GraphicsJNI.h"
+// #include "GraphicsJNI.h"
 #include "IconDatabase.h"
 #include "Image.h"
 #include "IntRect.h"
@@ -47,6 +47,8 @@
 #include <utils/misc.h>
 #include <wtf/Platform.h>
 #include <wtf/text/CString.h>
+
+#include "AndroidLog.h"
 
 namespace android {
 
@@ -74,7 +76,8 @@ jobject webcoreImageToJavaBitmap(JNIEnv* env, WebCore::Image* icon)
     SkBitmap* bm = webcoreImageToSkBitmap(icon);
     if (!bm)
         return 0;
-    return GraphicsJNI::createBitmap(env, bm, false, NULL);
+    //~: return GraphicsJNI::createBitmap(env, bm, false, NULL);
+    return 0;
 }
 
 static WebIconDatabase* gIconDatabaseClient = new WebIconDatabase();

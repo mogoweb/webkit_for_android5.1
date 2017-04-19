@@ -293,7 +293,7 @@ endif
 
 # LOCAL_LDLIBS is used in simulator builds only and simulator builds are only
 # valid on Linux
-LOCAL_LDLIBS += -lpthread -ldl
+LOCAL_LDLIBS += -ldl
 
 # Build the list of shared libraries
 # We have to use the android version of libdl

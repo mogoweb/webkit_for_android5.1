@@ -36,7 +36,7 @@
 #include "VideoLayerAndroid.h"
 #include "WebCoreJni.h"
 #include "WebViewCore.h"
-#include <GraphicsJNI.h>
+//~:#include <GraphicsJNI.h>
 #include <JNIHelp.h>
 #include <JNIUtility.h>
 #include <SkBitmap.h>
@@ -597,10 +597,10 @@ static void OnPosterFetched(JNIEnv* env, jobject obj, jobject poster, int pointe
         return;
 
     WebCore::MediaPlayerPrivate* player = reinterpret_cast<WebCore::MediaPlayerPrivate*>(pointer);
-    SkBitmap* posterNative = GraphicsJNI::getNativeBitmap(env, poster);
-    if (!posterNative)
-        return;
-    player->onPosterFetched(posterNative);
+    //~: SkBitmap* posterNative = GraphicsJNI::getNativeBitmap(env, poster);
+    //~: if (!posterNative)
+    //~:     return;
+    //~: player->onPosterFetched(posterNative);
 }
 
 static void OnBuffering(JNIEnv* env, jobject obj, int percent, int pointer)

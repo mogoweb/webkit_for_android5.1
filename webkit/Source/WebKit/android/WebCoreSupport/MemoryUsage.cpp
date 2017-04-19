@@ -37,11 +37,14 @@ using namespace WTF;
 
 int MemoryUsage::memoryUsageMb(bool /* forceFresh */)
 {
+#if 0  //~:
     size_t footprint = dlmalloc_footprint() >> 20;
     v8::HeapStatistics stat;
     v8::V8::GetHeapStatistics(&stat);
     unsigned v8Usage = stat.total_heap_size() >> 20;
     return footprint + v8Usage;
+#endif  //~:
+    return 0;
 }
 
 int MemoryUsage::m_lowMemoryUsageMb = 0;

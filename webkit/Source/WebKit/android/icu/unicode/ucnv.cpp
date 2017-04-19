@@ -33,7 +33,7 @@
 // END android-added
 
 #include "EmojiFont.h"
-#include <icu4c/common/unicode/ucnv.h>
+#include <icu/icu4c/source/common/unicode/ucnv.h>
 
 namespace android {
 

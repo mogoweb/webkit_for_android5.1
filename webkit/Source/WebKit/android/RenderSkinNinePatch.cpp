@@ -73,6 +73,7 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     }
 
     asset->close();
+#if 0  //~:
     if (!peeker.fPatch) {
         ALOGE("RenderSkinNinePatch::Patch data not valid");
         return false;
@@ -80,6 +81,7 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     void** data = &ninepatch->m_serializedPatchData;
     *data = malloc(peeker.fPatch->serializedSize());
     peeker.fPatch->serialize(*data);
+#endif  //~:
     return true;
 }
 
@@ -95,10 +97,10 @@ void RenderSkinNinePatch::DrawNinePatch(SkCanvas* canvas, const SkRect& bounds,
         SkPaint defaultPaint;
         // matches default dither in NinePatchDrawable.java.
         defaultPaint.setDither(true);
-        SkNinePatch::DrawMesh(canvas, bounds, patch.m_bitmap,
-                              data->xDivs, data->numXDivs,
-                              data->yDivs, data->numYDivs,
-                              &defaultPaint);
+        //~: SkNinePatch::DrawMesh(canvas, bounds, patch.m_bitmap,
+        //~:                       data->xDivs, data->numXDivs,
+        //~:                       data->yDivs, data->numYDivs,
+        //~:                       &defaultPaint);
     } else {
         NinePatch_Draw(canvas, bounds, patch.m_bitmap, *data, 0, 0);
     }

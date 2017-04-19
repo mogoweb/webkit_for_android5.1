@@ -36,7 +36,7 @@
 #include "FrameLoader.h"
 #include "FrameLoaderClientAndroid.h"
 #include "FrameTree.h"
-#include "GraphicsJNI.h"
+//~: #include "GraphicsJNI.h"
 #include "HistoryItem.h"
 #include "IconDatabase.h"
 #include "Page.h"
@@ -264,12 +264,14 @@ static jobject WebHistoryGetFavicon(JNIEnv* env, jobject obj, jint ptr)
     WebHistoryItem* item = reinterpret_cast<WebHistoryItem*>(ptr);
     MutexLocker locker(item->m_lock);
     if (!item->m_faviconCached && item->m_favicon) {
+#if 0  //~:
         jobject favicon = GraphicsJNI::createBitmap(env,
                                                     item->m_favicon,
                                                     false, NULL);
         item->m_favicon = 0; // Framework now owns the pointer
         item->m_faviconCached = env->NewGlobalRef(favicon);
         env->DeleteLocalRef(favicon);
+#endif  //~:
     }
     return item->m_faviconCached;
 }
@@ -905,7 +907,7 @@ static void unitTest()
     offset += 4; // Text wrap scale
     offset += 4; // Scroll pos x
     offset += 4; // Scroll pos y
-    // Document state 
+    // Document state
     offset += 4;
     memset(test3, 0, HISTORY_MIN_SIZE);
     ptr = (const char*)test3;
