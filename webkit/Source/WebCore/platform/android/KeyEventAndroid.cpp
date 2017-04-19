@@ -33,7 +33,7 @@
 
 #include "NotImplemented.h"
 #include "WindowsKeyboardCodes.h"
-#include <androidfw/KeycodeLabels.h>
+#include <android/keycodes.h>
 
 namespace WebCore {
 

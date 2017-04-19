@@ -9,7 +9,7 @@ test_src_files := \
 shared_libraries := \
     libcutils \
     libwebcore \
-    libskia \
+    libskia_old \
     libstlport
 
 static_libraries := \
@@ -21,8 +21,8 @@ c_includes := \
     bionic/libstdc++/include \
     external/gtest/include \
     external/stlport/stlport \
-    external/skia/include/core \
-    external/icu4c/common \
+    external/skia_old/include/core \
+    external/icu/icu4c/source/common \
     $(LOCAL_PATH)/../../JavaScriptCore \
     $(LOCAL_PATH)/../../JavaScriptCore/wtf \
     $(LOCAL_PATH)/.. \

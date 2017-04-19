@@ -28,7 +28,7 @@
 
 // Include the real ucnv.h file from icu. Use a more exact reference so we do
 // not conflict with this file.
-#include <icu4c/common/unicode/ucnv.h>
+#include <icu/icu4c/source/common/unicode/ucnv.h>
 
 namespace android {
 
