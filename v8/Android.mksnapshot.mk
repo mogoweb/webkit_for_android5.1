@@ -9,7 +9,7 @@ LOCAL_IS_HOST_MODULE := true
 LOCAL_MODULE := mksnapshot.$(TARGET_ARCH)
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_TAGS = optional
-intermediates := $(call local-intermediates-dir)
+intermediates := $(call local-intermediates-dir,,$(HOST_2ND_ARCH_VAR_PREFIX))
 
 V8_LOCAL_SRC_FILES :=
 V8_LOCAL_JS_LIBRARY_FILES :=
@@ -29,9 +29,9 @@ V8_LOCAL_SRC_FILES += src/mips/simulator-mips.cc
 
 endif
 
-ifeq ($(HOST_ARCH),x86)
+#ifeq ($(HOST_ARCH),x86)
 V8_LOCAL_SRC_FILES += src/atomicops_internals_x86_gcc.cc
-endif
+#endif
 
 ifeq ($(HOST_OS),linux)
 V8_LOCAL_SRC_FILES += \

@@ -27,9 +27,9 @@ V8_LOCAL_SRC_FILES += \
   src/platform-linux.cc \
   src/platform-posix.cc
 
-ifeq ($(TARGET_ARCH),x86)
+#ifeq ($(TARGET_ARCH),x86)
 V8_LOCAL_SRC_FILES += src/atomicops_internals_x86_gcc.cc
-endif
+#endif
 
 LOCAL_SRC_FILES := $(V8_LOCAL_SRC_FILES)
 
