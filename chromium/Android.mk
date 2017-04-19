@@ -413,8 +413,8 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/sdch/open-vcdiff/src \
     $(LOCAL_PATH)/third_party/libevent/compat \
     external/expat \
-    external/icu4c/common \
-    external/icu4c/i18n \
+    external/icu/icu4c/source/common \
+    external/icu/icu4c/source/i18n \
     external/openssl/include \
     external/skia \
     external/sqlite/dist \
