@@ -27,10 +27,6 @@ import java.io.InputStream;
 
 class JniUtil {
 
-    static {
-        System.loadLibrary("webcore");
-        System.loadLibrary("chromium_net");
-    }
     private static final String LOGTAG = "webkit";
     private JniUtil() {} // Utility class, do not instantiate.
 

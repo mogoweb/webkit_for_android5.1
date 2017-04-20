@@ -70,7 +70,7 @@ public final class WebViewFactory {
 
     private static final String LOGTAG = "WebViewFactory";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     // Cache the factory both for efficiency, and ensure any one process gets all webviews from the
     // same provider.
@@ -158,7 +158,7 @@ public final class WebViewFactory {
             }
 
             Trace.traceBegin(Trace.TRACE_TAG_WEBVIEW, "WebViewFactory.getProvider()");
-            
+
             try {
                 Class<WebViewFactoryProvider> providerClass;
                 Trace.traceBegin(Trace.TRACE_TAG_WEBVIEW, "WebViewFactory.getFactoryClass()");
@@ -180,6 +180,10 @@ public final class WebViewFactory {
                     } catch (Exception e) {
                         sProviderInstance = providerClass.newInstance();
                     }
+                    {
+                        System.loadLibrary("webcore");
+                        System.loadLibrary("chromium_net");
+                    }
                     if (DEBUG) Log.v(LOGTAG, "Loaded provider: " + sProviderInstance);
                     return sProviderInstance;
                 } catch (Exception e) {
@@ -192,7 +196,7 @@ public final class WebViewFactory {
             } finally {
                 Trace.traceEnd(Trace.TRACE_TAG_WEBVIEW);
             }
-        }          
+        }
     }
 
     private static Class<WebViewFactoryProvider> getFactoryClass() throws ClassNotFoundException {

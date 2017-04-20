@@ -262,7 +262,7 @@ public class WebView extends AbsoluteLayout
             "android.webkit.DATA_REDUCTION_PROXY_SETTING_CHANGED";
 
     private static final String LOGTAG = "WebView";
-    private static final boolean TRACE = false;
+    private static final boolean TRACE = true;
 
     // Throwing an exception for incorrect thread usage if the
     // build target is JB MR2 or newer. Defaults to false, and is
