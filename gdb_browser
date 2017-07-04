@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+
+# check env setup first
+if [ ! "$ANDROID_BUILD_TOP" ]; then
+	echo "please use build.sh to set env var first!"
+	exit
+fi
+
+GDBSERVER_LOG=temp.log
+BROWSER_PACKAGE_NAME="com.android.browser"
+BROWSER_ACTIVITY="BrowserActivity"
+# adbd get root privileges
+adb root
+sleep 5
+
+# get pid of browser
+PID=$(adb shell ps | grep $BROWSER_PACKAGE_NAME | awk '{print $2}')
+echo "pid of $BROWSER_PACKAGE_NAME is $PID"
+if [ ! "$PID" ]; then
+	adb shell am start -n $BROWSER_PACKAGE_NAME/.$BROWSER_ACTIVITY
+	sleep 2
+	PID=$(adb shell ps | grep $BROWSER_PACKAGE_NAME | awk '{print $2}')
+fi
+
+# kill gdbserver
+gdbserver_pid=$(adb shell ps | grep "gdbserver" | awk '{print $2}')
+if [ "$gdbserver_pid" ]; then
+	adb shell kill $gdbserver_pid
+fi
+
+# gdbserver attach browser pid in background
+echo "attach pid $PID in background"
+(adb shell gdbserver :5039 --attach $PID > $GDBSERVER_LOG 2>&1) &
+
+sleep 2
+
+touch gdb.init
+readonly COMMANDS=gdb.init
+echo -n "" > $COMMANDS
+echo "ANDROID_BUILD_TOP = $ANDROID_BUILD_TOP"
+adb forward tcp:5039 tcp:5039
+
+echo "file $ANDROID_PRODUCT_OUT/symbols/system/bin/app_process32" >> $COMMANDS
+echo "set solib-absolute-prefix $ANDROID_PRODUCT_OUT/symbols/system/lib" >> $COMMANDS
+echo "set solib-search-path $ANDROID_PRODUCT_OUT/symbols/system/lib" >> $COMMANDS
+echo "target remote :5039" >> $COMMANDS
+
+$ANDROID_TOOLCHAIN/arm-linux-androideabi-gdb  -x $COMMANDS &&
+
+# kill gdbserver
+gdbserver_pid=$(adb shell ps | grep "gdbserver" | awk '{print $2}')
+if [ "x$gdbserver_pid"!="x" ]; then
+	adb shell kill $gdbserver_pid
+fi
+echo "done"
