@@ -29,7 +29,7 @@ import android.util.Log;
 public final class URLUtil {
 
     private static final String LOGTAG = "webkit";
-    private static final boolean TRACE = false;
+    private static final boolean TRACE = true;
 
     // to refer to bar.png under your package's asset/foo/ directory, use
     // "file:///android_asset/foo/bar.png".

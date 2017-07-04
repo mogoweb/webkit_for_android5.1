@@ -139,6 +139,10 @@ class CookieManagerClassic extends CookieManager {
 
     @Override
     public void removeSessionCookie() {
+        if (JniUtil.getContext() == null) {
+            return;
+        }
+
         signalCookieOperationsStart();
         new AsyncTask<Void, Void, Void>() {
             @Override
