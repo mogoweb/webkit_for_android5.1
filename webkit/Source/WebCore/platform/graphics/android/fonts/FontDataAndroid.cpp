@@ -26,7 +26,9 @@
 
 #include "config.h"
 
+#if ENABLE(OLD_SKIA)
 #include "EmojiFont.h"
+#endif
 #include "Font.h"
 #include "FontCache.h"
 #include "SimpleFontData.h"
@@ -133,12 +135,16 @@ float SimpleFontData::platformWidthForGlyph(Glyph glyph) const
     m_platformData.setupPaint(&paint);
 
     float advanceWidth;
+#if ENABLE(OLD_SKIA)
     if (EmojiFont::IsEmojiGlyph(glyph))
         advanceWidth = EmojiFont::GetAdvanceWidth(glyph, paint);
     else {
+#endif
         paint.setTextEncoding(SkPaint::kGlyphID_TextEncoding);
         advanceWidth = SkScalarToFloat(paint.measureText(&glyph, 2));
+#if ENABLE(OLD_SKIA)
     }
+#endif
     return advanceWidth;
 }
 

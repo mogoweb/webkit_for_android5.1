@@ -80,6 +80,10 @@
 #include <androidfw/AssetManager.h>
 #include <wtf/text/CString.h>
 
+#define LOG_TAG "LOADER"
+
+#include <utils/Log.h>
+
 #define verifiedOk() // Verified that we don't need to implement this.
 
 extern android::AssetManager* globalAssetManager();
@@ -727,11 +731,13 @@ void FrameLoaderClientAndroid::didRunInsecureContent(SecurityOrigin*, const KURL
 }
 
 void FrameLoaderClientAndroid::committedLoad(DocumentLoader* loader, const char* data, int length) {
+    ALOGI("FrameLoaderClientAndroid::committedLoad");
     if (!m_manualLoader)
         loader->commitData(data, length);
 
     // commit data may have created a manual plugin loader
     if (m_manualLoader) {
+        ALOGI("manualLoader");
         if (!m_hasSentResponseToPlugin) {
             m_manualLoader->didReceiveResponse(loader->response());
             // Failure could cause the main document to have an error causing
@@ -742,6 +748,7 @@ void FrameLoaderClientAndroid::committedLoad(DocumentLoader* loader, const char*
         }
         m_manualLoader->didReceiveData(data, length);
     }
+    ALOGI("finish FrameLoaderClientAndroid::committedLoad");
 }
 
 ResourceError FrameLoaderClientAndroid::cancelledError(const ResourceRequest& request) {

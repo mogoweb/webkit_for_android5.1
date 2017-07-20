@@ -45,6 +45,10 @@
 #include "Settings.h"
 #include "SharedBuffer.h"
 
+#define LOG_TAG "LOADER"
+
+#include <utils/Log.h>
+
 namespace WebCore {
 
 PassRefPtr<SharedBuffer> ResourceLoader::resourceData()
@@ -275,6 +279,7 @@ void ResourceLoader::didReceiveResponse(const ResourceResponse& r)
 
 void ResourceLoader::didReceiveData(const char* data, int length, long long encodedDataLength, bool allAtOnce)
 {
+    ALOGI("ResourceLoader::didReceiveData");
     // The following assertions are not quite valid here, since a subclass
     // might override didReceiveData in a way that invalidates them. This
     // happens with the steps listed in 3266216
@@ -285,12 +290,15 @@ void ResourceLoader::didReceiveData(const char* data, int length, long long enco
     // anything including possibly derefing this; one example of this is Radar 3266216.
     RefPtr<ResourceLoader> protector(this);
 
+    ALOGI("addData");
     addData(data, length, allAtOnce);
+    ALOGI("after addData");
     // FIXME: If we get a resource with more than 2B bytes, this code won't do the right thing.
     // However, with today's computers and networking speeds, this won't happen in practice.
     // Could be an issue with a giant local file.
     if (m_sendResourceLoadCallbacks && m_frame)
         frameLoader()->notifier()->didReceiveData(this, data, length, static_cast<int>(encodedDataLength));
+    ALOGI("finish ResourceLoader::didReceiveData");
 }
 
 void ResourceLoader::willStopBufferingData(const char* data, int length)

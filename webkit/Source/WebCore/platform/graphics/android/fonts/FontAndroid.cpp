@@ -29,7 +29,11 @@
 #define LOG_TAG "FontAndroid"
 
 #include "AndroidLog.h"
+#if ENABLE(OLD_SKIA)
 #include "EmojiFont.h"
+#else
+#include "SkPaintOptionsAndroid.h"
+#endif
 #include "GraphicsOperation.h"
 #include "Font.h"
 #include "FontData.h"
@@ -224,6 +228,7 @@ void Font::drawGlyphs(GraphicsContext* gc, const SimpleFontData* font,
         y += yOffset;
     }
 
+#if ENABLE(OLD_SKIA)
     if (EmojiFont::IsAvailable()) {
         // set filtering, to make scaled images look nice(r)
         paint.setFilterBitmap(true);
@@ -269,7 +274,9 @@ void Font::drawGlyphs(GraphicsContext* gc, const SimpleFontData* font,
 
         if (font->platformData().orientation() == Vertical)
             canvas->restore();
-    } else {
+    } else 
+#endif
+    {
         for (int i = 0; i < numGlyphs; i++) {
             pos[i].set(x, y);
             y += SkFloatToScalar(adv[i].height());
@@ -493,7 +500,11 @@ public:
 
 private:
     void setupFontForScriptRun();
+#if ENABLE(OLD_SKIA)
     const FontPlatformData* setupComplexFont(HB_Script script, const FontPlatformData& platformData);
+#else
+    const FontPlatformData* setupComplexFont(hb_script_t script, const FontPlatformData& platformData);
+#endif
     HB_FontRec* allocHarfbuzzFont();
     void deleteGlyphArrays();
     void createGlyphArrays(int);
@@ -688,8 +699,13 @@ void TextRunWalker::setWordAndLetterSpacing(int wordSpacingAdjustment,
     setLetterSpacingAdjustment(letterSpacingAdjustment);
 }
 
+#if ENABLE(OLD_SKIA)
 const FontPlatformData* TextRunWalker::setupComplexFont(
     HB_Script script, const FontPlatformData& platformData)
+#else
+const FontPlatformData* TextRunWalker::setupComplexFont(
+    hb_script_t script, const FontPlatformData& platformData)
+#endif
 {
     static FallbackHash fallbackPlatformData;
 
@@ -710,8 +726,13 @@ const FontPlatformData* TextRunWalker::setupComplexFont(
         SkTypeface::Style currentStyle = SkTypeface::kNormal;
         if (platformData.typeface())
             currentStyle = platformData.typeface()->style();
+#if ENABLE(OLD_SKIA)
         SkTypeface* typeface = SkCreateTypefaceForScript(script, currentStyle,
             SkPaint::kElegant_Variant);
+#else
+        SkTypeface* typeface = SkCreateTypefaceForScript(script, currentStyle,
+            SkPaintOptionsAndroid::kElegant_Variant);
+#endif
         newPlatformData = new FontPlatformData(platformData, typeface);
         SkSafeUnref(typeface);
         fallbackPlatformData.set(key, newPlatformData);

@@ -90,17 +90,17 @@ LOCAL_C_INCLUDES := \
 	external/libxml2/include \
 	external/libxslt \
 	external/hyphenation \
-	external/skia_old/emoji \
-	external/skia_old/gpu/include \
-	external/skia_old/include/core \
-	external/skia_old/include/effects \
-	external/skia_old/include/gpu \
-	external/skia_old/include/images \
-	external/skia_old/include/ports \
-	external/skia_old/include/utils \
-	external/skia_old/src/core \
-	external/skia_old/src/images \
-	external/skia_old/src/ports \
+	external/skia/emoji \
+	external/skia/gpu/include \
+	external/skia/include/core \
+	external/skia/include/effects \
+	external/skia/include/gpu \
+	external/skia/include/images \
+	external/skia/include/ports \
+	external/skia/include/utils \
+	external/skia/src/core \
+	external/skia/src/images \
+	external/skia/src/ports \
 	external/sqlite/dist \
 	frameworks/base/core/jni/android/graphics \
 	frameworks/base/include
@@ -209,7 +209,7 @@ LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
 	external/chromium/chrome/renderer \
 	external/chromium \
 	external/chromium/chrome \
-	external/skia_old
+	external/skia
 
 LOCAL_CFLAGS += -DWEBKIT_IMPLEMENTATION=1
 
@@ -313,7 +313,7 @@ LOCAL_SHARED_LIBRARIES := \
 	liblog \
 	libmedia \
 	libnativehelper \
-	libskia_old \
+	libskia \
 	libsqlite \
 	libssl \
 	libstlport \

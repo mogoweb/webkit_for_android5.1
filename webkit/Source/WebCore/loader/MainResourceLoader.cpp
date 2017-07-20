@@ -50,6 +50,11 @@
 #include "ResourceLoadScheduler.h"
 #include "SchemeRegistry.h"
 #include "Settings.h"
+
+#define LOG_TAG "LOADER"
+
+#include <utils/Log.h>
+
 #include <wtf/CurrentTime.h>
 
 // FIXME: More that is in common with SubresourceLoader should move up into ResourceLoader.
@@ -159,8 +164,11 @@ bool MainResourceLoader::isPostOrRedirectAfterPost(const ResourceRequest& newReq
 
 void MainResourceLoader::addData(const char* data, int length, bool allAtOnce)
 {
+    ALOGI("MainResourceLoader::addData");
     ResourceLoader::addData(data, length, allAtOnce);
+    ALOGI("after ResourceLoader::addData");
     documentLoader()->receivedData(data, length);
+    ALOGI("finish MainResourceLoader::addData");
 }
 
 void MainResourceLoader::willSendRequest(ResourceRequest& newRequest, const ResourceResponse& redirectResponse)
@@ -421,6 +429,7 @@ void MainResourceLoader::didReceiveResponse(const ResourceResponse& r)
 
 void MainResourceLoader::didReceiveData(const char* data, int length, long long encodedDataLength, bool allAtOnce)
 {
+    ALOGI("MainResourceLoader::didReceiveData");
     ASSERT(data);
     ASSERT(length != 0);
 
@@ -452,6 +461,7 @@ void MainResourceLoader::didReceiveData(const char* data, int length, long long 
     m_timeOfLastDataReceived = currentTime();
 
     ResourceLoader::didReceiveData(data, length, encodedDataLength, allAtOnce);
+    ALOGI("finish MainResourceLoader::didReceiveData");
 }
 
 void MainResourceLoader::didFinishLoading(double finishTime)

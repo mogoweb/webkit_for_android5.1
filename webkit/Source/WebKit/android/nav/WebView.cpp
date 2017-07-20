@@ -36,6 +36,8 @@
 #include "Frame.h"
 #include "GLWebViewState.h"
 //~: #include "GraphicsJNI.h"
+// because skia not compatible with the android 5.1, so we cannot include GraphicsJNI.h directly.
+#include "OldGraphicsJNI.h"
 #include "HTMLInputElement.h"
 #include "IntPoint.h"
 #include "IntRect.h"
@@ -625,10 +627,10 @@ void floatQuadToQuadF(JNIEnv* env, const FloatQuad& nativeTextQuad,
     jobject p2 = env->GetObjectField(textQuad, m_javaGlue.m_quadFP2);
     jobject p3 = env->GetObjectField(textQuad, m_javaGlue.m_quadFP3);
     jobject p4 = env->GetObjectField(textQuad, m_javaGlue.m_quadFP4);
-    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p1(), env, p1);
-    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p2(), env, p2);
-    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p3(), env, p3);
-    //~: GraphicsJNI::point_to_jpointf(nativeTextQuad.p4(), env, p4);
+    GraphicsJNI::point_to_jpointf(nativeTextQuad.p1(), env, p1);
+    GraphicsJNI::point_to_jpointf(nativeTextQuad.p2(), env, p2);
+    GraphicsJNI::point_to_jpointf(nativeTextQuad.p3(), env, p3);
+    GraphicsJNI::point_to_jpointf(nativeTextQuad.p4(), env, p4);
     env->DeleteLocalRef(p1);
     env->DeleteLocalRef(p2);
     env->DeleteLocalRef(p3);
@@ -881,7 +883,7 @@ static WebCore::IntRect jrect_to_webrect(JNIEnv* env, jobject obj)
 {
     if (obj) {
         int L, T, R, B;
-        //~: GraphicsJNI::get_jrect(env, obj, &L, &T, &R, &B);
+        GraphicsJNI::get_jrect(env, obj, &L, &T, &R, &B);
         return WebCore::IntRect(L, T, R - L, B - T);
     } else
         return WebCore::IntRect();
@@ -891,14 +893,14 @@ static SkRect jrectf_to_rect(JNIEnv* env, jobject obj)
 {
     SkRect rect = SkRect::MakeEmpty();
     if (obj)
-        ;//~: GraphicsJNI::jrectf_to_rect(env, obj, &rect);
+        GraphicsJNI::jrectf_to_rect(env, obj, &rect);
     return rect;
 }
 
 static void nativeDraw(JNIEnv *env, jobject obj, jobject canv,
         jobject visible, jint color,
         jint extras) {
-    SkCanvas* canvas = NULL;//~: GraphicsJNI::getNativeCanvas(env, canv);
+    SkCanvas* canvas = GraphicsJNI::getNativeCanvas(env, canv);
     WebView* webView = GET_NATIVE_VIEW(env, obj);
     SkRect visibleContentRect = jrectf_to_rect(env, visible);
     webView->setVisibleContentRect(visibleContentRect);
@@ -1227,9 +1229,9 @@ static int nativeScrollableLayer(JNIEnv* env, jobject jwebview, jint nativeView,
     SkIRect nativeRect, nativeBounds;
     int id = webview->scrollableLayer(x, y, &nativeRect, &nativeBounds);
     if (rect)
-        ;//~: GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
+        GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
     if (bounds)
-        ;//~: GraphicsJNI::irect_to_jrect(nativeBounds, env, bounds);
+        GraphicsJNI::irect_to_jrect(nativeBounds, env, bounds);
     return id;
 }
 
@@ -1301,7 +1303,7 @@ static jint nativeGetHandleLayerId(JNIEnv *env, jobject obj, jint nativeView,
     int layerId = webview->getHandleLayerId((SelectText::HandleId) handleIndex,
             nativePoint, nativeTextQuad);
     if (cursorPoint)
-        ;//~: GraphicsJNI::ipoint_to_jpoint(nativePoint, env, cursorPoint);
+        GraphicsJNI::ipoint_to_jpoint(nativePoint, env, cursorPoint);
     if (textQuad)
         webview->floatQuadToQuadF(env, nativeTextQuad, textQuad);
     return layerId;
@@ -1312,9 +1314,9 @@ static void nativeMapLayerRect(JNIEnv *env, jobject obj, jint nativeView,
 {
     WebView* webview = reinterpret_cast<WebView*>(nativeView);
     SkIRect nativeRect;
-    //~: GraphicsJNI::jrect_to_irect(env, rect, &nativeRect);
+    GraphicsJNI::jrect_to_irect(env, rect, &nativeRect);
     webview->mapLayerRect(layerId, nativeRect);
-    //~: GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
+    GraphicsJNI::irect_to_jrect(nativeRect, env, rect);
 }
 
 static jint nativeSetHwAccelerated(JNIEnv *env, jobject obj, jint nativeView,
@@ -1329,9 +1331,9 @@ static void nativeFindMaxVisibleRect(JNIEnv *env, jobject obj, jint nativeView,
 {
     WebView* webview = reinterpret_cast<WebView*>(nativeView);
     SkIRect nativeRect;
-    //~: GraphicsJNI::jrect_to_irect(env, visibleContentRect, &nativeRect);
+    GraphicsJNI::jrect_to_irect(env, visibleContentRect, &nativeRect);
     webview->findMaxVisibleRect(movingLayerId, nativeRect);
-    //~: GraphicsJNI::irect_to_jrect(nativeRect, env, visibleContentRect);
+    GraphicsJNI::irect_to_jrect(nativeRect, env, visibleContentRect);
 }
 
 static bool nativeIsHandleLeft(JNIEnv *env, jobject obj, jint nativeView,

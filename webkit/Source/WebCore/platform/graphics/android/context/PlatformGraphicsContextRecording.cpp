@@ -38,6 +38,10 @@
 #include "PlatformGraphicsContextSkia.h"
 #include "RTree.h"
 #include "SkDevice.h"
+#if !ENABLE(OLD_SKIA)
+#include "SkScalar.h"
+#define SkFloatToScalar(n)      (n)
+#endif
 
 #include "wtf/NonCopyingSort.h"
 #include "wtf/HashSet.h"
@@ -452,10 +456,21 @@ void Recording::draw(SkCanvas* canvas)
         nonCopyingSort(nodes.begin(), nodes.end(), CompareRecordingDataOrder);
         PlatformGraphicsContextSkia context(canvas);
 #if USE_CLIPPING_PAINTER
+#if ENABLE(OLD_SKIA)
         if (canvas->getDevice() && canvas->getDevice()->config() != SkBitmap::kNo_Config
             && count < MAX_CLIPPING_RECURSION_COUNT) {
+#else
+        if (canvas->getDevice() && canvas->getDevice()->accessBitmap.config() != SkBitmap::kNo_Config
+            && count < MAX_CLIPPING_RECURSION_COUNT) {
+#endif
             ClippingPainter painter(recording(), context, canvas->getTotalMatrix(), nodes);
+#if ENABLE(OLD_SKIA)
             painter.draw(canvas->getTotalClip().getBounds());
+#else
+            SkIRect bounds;
+            canvas->getClipDeviceBounds(&bounds);
+            painter.draw(bounds);
+#endif
         } else
 #endif
         {

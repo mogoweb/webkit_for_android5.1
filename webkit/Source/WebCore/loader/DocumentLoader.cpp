@@ -58,6 +58,10 @@
 #include "ArchiveFactory.h"
 #endif
 
+#define LOG_TAG "LOADER"
+
+#include <utils/Log.h>
+
 namespace WebCore {
 
 static void cancelAll(const ResourceLoaderSet& loaders)
@@ -291,11 +295,13 @@ void DocumentLoader::finishedLoading()
 
 void DocumentLoader::commitLoad(const char* data, int length)
 {
+    ALOGI("DocumentLoader::commitLoad");
     // Both unloading the old page and parsing the new page may execute JavaScript which destroys the datasource
     // by starting a new load, so retain temporarily.
     RefPtr<Frame> protectFrame(m_frame);
     RefPtr<DocumentLoader> protectLoader(this);
 
+    ALOGI("commitIfReady");
     commitIfReady();
     FrameLoader* frameLoader = DocumentLoader::frameLoader();
     if (!frameLoader)
@@ -304,11 +310,14 @@ void DocumentLoader::commitLoad(const char* data, int length)
     if (ArchiveFactory::isArchiveMimeType(response().mimeType()))
         return;
 #endif
+    ALOGI("frameLoader->client()->committedLoad");
     frameLoader->client()->committedLoad(this, data, length);
+    ALOGI("finish DocumentLoader::commitLoad");
 }
 
 void DocumentLoader::commitData(const char* bytes, int length)
 {
+    ALOGI("DocumentLoader::commitData");
     // Set the text encoding.  This is safe to call multiple times.
     bool userChosen = true;
     String encoding = overrideEncoding();
@@ -318,7 +327,9 @@ void DocumentLoader::commitData(const char* bytes, int length)
     }
     m_writer.setEncoding(encoding, userChosen);
     ASSERT(m_frame->document()->parsing());
+    ALOGI("m_writer.addData");
     m_writer.addData(bytes, length);
+    ALOGI("finish DocumentLoader::commitData");
 }
 
 bool DocumentLoader::doesProgressiveLoad(const String& MIMEType) const
@@ -328,6 +339,7 @@ bool DocumentLoader::doesProgressiveLoad(const String& MIMEType) const
 
 void DocumentLoader::receivedData(const char* data, int length)
 {    
+    ALOGI("DocumentLoader::receivedData");
     m_gotFirstByte = true;
     if (doesProgressiveLoad(m_response.mimeType()))
         commitLoad(data, length);

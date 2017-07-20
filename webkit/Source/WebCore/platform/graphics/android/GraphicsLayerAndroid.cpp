@@ -55,6 +55,10 @@
 #include "TransformationMatrix.h"
 #include "TranslateTransformOperation.h"
 
+#if !ENABLE(OLD_SKIA)
+#include "SkPictureRecorder.h"
+#endif
+
 #include <wtf/CurrentTime.h>
 #include <wtf/text/CString.h>
 
@@ -751,9 +755,15 @@ bool GraphicsLayerAndroid::repaint()
             m_foregroundLayer->markAsDirty(m_foregroundLayerContent.dirtyRegion());
             m_foregroundLayerContent.dirtyRegion().setEmpty();
         } else if (m_contentLayer->isFixedBackground()) {
+#if ENABLE(OLD_SKIA)
             SkPicture* picture = new SkPicture();
             SkCanvas* canvas = picture->beginRecording(layerBounds.width(),
                                                        layerBounds.height(), 0);
+#else
+            SkPictureRecorder* pictureRecorder = new SkPictureRecorder();
+            SkCanvas* canvas = pictureRecorder->beginRecording(layerBounds.width(),
+                                                       layerBounds.height());
+#endif
             if (canvas) {
                   PaintingPhase phase(this);
                   PlatformGraphicsContextSkia platformContext(canvas);
@@ -767,14 +777,25 @@ bool GraphicsLayerAndroid::repaint()
                   // Paint the foreground...
                   phase.set(GraphicsLayerPaintForeground);
                   paintGraphicsLayerContents(graphicsContext, layerBounds);
+#if ENABLE(OLD_SKIA)
                   picture->endRecording();
+#else
+                  SkPicture* picture = pictureRecorder->endRecording();
+#endif
 
                   // Now set the content for that layer.
                   PictureLayerContent* layerContent = new PictureLayerContent(picture);
                   m_foregroundLayer->setContent(layerContent);
                   SkSafeUnref(layerContent);
+#if !ENABLE(OLD_SKIA)
+                  SkSafeUnref(picture);
+#endif
             }
+#if ENABLE(OLD_SKIA)
             SkSafeUnref(picture);
+#else
+            delete pictureRecorder;
+#endif
 
             m_foregroundLayer->setSize(layerBounds.width(), layerBounds.height());
             m_foregroundClipLayer->setPosition(layerBounds.x(), layerBounds.y());

@@ -62,7 +62,9 @@
 #include "FrameView.h"
 #include "Geolocation.h"
 #include "GraphicsContext.h"
-//~: #include "GraphicsJNI.h"
+//~:#include "GraphicsJNI.h"
+// because skia not compatible with the android 5.1, so we cannot include GraphicsJNI.h directly.
+#include "OldGraphicsJNI.h"
 #include "HTMLAnchorElement.h"
 #include "HTMLAreaElement.h"
 #include "HTMLElement.h"
@@ -4631,7 +4633,7 @@ static jint RecordContent(JNIEnv* env, jobject obj, jint nativeClass, jobject pt
     WebViewCore* viewImpl = reinterpret_cast<WebViewCore*>(nativeClass);
     SkIPoint nativePt;
     BaseLayerAndroid* result = viewImpl->recordContent(&nativePt);
-    //~: GraphicsJNI::ipoint_to_jpoint(nativePt, env, pt);
+    GraphicsJNI::ipoint_to_jpoint(nativePt, env, pt);
     return reinterpret_cast<jint>(result);
 }
 
@@ -4984,7 +4986,7 @@ static void ScrollRenderLayer(JNIEnv* env, jobject obj, jint nativeClass,
         jint layer, jobject jRect)
 {
     SkRect rect;
-    //~: GraphicsJNI::jrect_to_rect(env, jRect, &rect);
+    GraphicsJNI::jrect_to_rect(env, jRect, &rect);
     reinterpret_cast<WebViewCore*>(nativeClass)->scrollRenderLayer(layer, rect);
 }
 

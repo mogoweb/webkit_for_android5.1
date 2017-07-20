@@ -46,6 +46,9 @@
 #include "SinkDocument.h"
 #include "TextResourceDecoder.h"
 
+#define LOG_TAG "LOADER"
+
+#include <utils/Log.h>
 
 namespace WebCore {
 
@@ -199,12 +202,14 @@ void DocumentWriter::reportDataReceived()
 
 void DocumentWriter::addData(const char* str, int len, bool flush)
 {
+    ALOGI("DocumentWriter::addData");
     if (len == -1)
         len = strlen(str);
 
     DocumentParser* parser = m_frame->document()->parser();
     if (parser)
         parser->appendBytes(this, str, len, flush);
+    ALOGI("finish DocumentWriter::addData");
 }
 
 void DocumentWriter::end()

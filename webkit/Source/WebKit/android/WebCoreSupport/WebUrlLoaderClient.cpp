@@ -37,6 +37,8 @@
 #include "WebRequest.h"
 #include "WebResourceRequest.h"
 
+#define LOG_TAG "LOADER"
+
 #include <utils/Log.h>
 #include <wtf/text/CString.h>
 
@@ -347,6 +349,7 @@ static void RunTask(void* v) {
 // This is called from the IO thread, and dispatches the callback to the main thread.
 void WebUrlLoaderClient::maybeCallOnMainThread(Task* task)
 {
+    ALOGI("WebUrlLoaderClient::maybeCallOnMainThread");
     if (m_sync) {
         AutoLock autoLock(*syncLock());
         if (m_queue.empty()) {
@@ -355,6 +358,7 @@ void WebUrlLoaderClient::maybeCallOnMainThread(Task* task)
         m_queue.push_back(task);
     } else {
         // Let WebKit handle it.
+        ALOGI("callOnMainThread");
         callOnMainThread(RunTask, task);
     }
 }
@@ -362,6 +366,7 @@ void WebUrlLoaderClient::maybeCallOnMainThread(Task* task)
 // Response methods
 void WebUrlLoaderClient::didReceiveResponse(PassOwnPtr<WebResponse> webResponse)
 {
+    ALOGI("WebUrlLoaderClient::didReceiveResponse");
     if (!isActive())
         return;
 
@@ -382,10 +387,12 @@ void WebUrlLoaderClient::didReceiveResponse(PassOwnPtr<WebResponse> webResponse)
         if (m_response->getHeader("x-auto-login", &login))
             m_webFrame->autoLogin(login);
     }
+    ALOGI("finish WebUrlLoaderClient::didReceiveResponse");
 }
 
 void WebUrlLoaderClient::didReceiveData(scoped_refptr<net::IOBuffer> buf, int size)
 {
+    ALOGI("WebUrlLoaderClient::didReceiveData");
     if (m_isMainResource && m_isCertMimeType) {
         m_webFrame->didReceiveData(buf->data(), size);
     }
@@ -396,16 +403,19 @@ void WebUrlLoaderClient::didReceiveData(scoped_refptr<net::IOBuffer> buf, int si
     // didReceiveData will take a copy of the data
     if (m_resourceHandle && m_resourceHandle->client())
         m_resourceHandle->client()->didReceiveData(m_resourceHandle.get(), buf->data(), size, size);
+    ALOGI("finish WebUrlLoaderClient::didReceiveData");
 }
 
 // For data url's
 void WebUrlLoaderClient::didReceiveDataUrl(PassOwnPtr<std::string> str)
 {
+    ALOGI("WebUrlLoaderClient::didReceiveDataUrl");
     if (!isActive() || !str->size())
         return;
 
     // didReceiveData will take a copy of the data
     m_resourceHandle->client()->didReceiveData(m_resourceHandle.get(), str->data(), str->size(), str->size());
+    ALOGI("finish WebUrlLoaderClient::didReceiveDataUrl");
 }
 
 // For special android files
@@ -420,6 +430,7 @@ void WebUrlLoaderClient::didReceiveAndroidFileData(PassOwnPtr<std::vector<char> 
 
 void WebUrlLoaderClient::didFail(PassOwnPtr<WebResponse> webResponse)
 {
+    ALOGI("WebUrlLoaderClient::didFail");
     if (isActive())
         m_resourceHandle->client()->didFail(m_resourceHandle.get(), webResponse->createResourceError());
 
@@ -450,6 +461,7 @@ void WebUrlLoaderClient::willSendRequest(PassOwnPtr<WebResponse> webResponse)
 
 void WebUrlLoaderClient::didFinishLoading()
 {
+    ALOGI("WebUrlLoaderClient::didFinishLoading");
     if (isActive())
         m_resourceHandle->client()->didFinishLoading(m_resourceHandle.get(), 0);
 
@@ -459,6 +471,7 @@ void WebUrlLoaderClient::didFinishLoading()
 
     // Always finish a request, if not it will leak
     finish();
+    ALOGI("finish WebUrlLoaderClient::didFinishLoading");
 }
 
 void WebUrlLoaderClient::authRequired(scoped_refptr<net::AuthChallengeInfo> authChallengeInfo, bool firstTime, bool suppressDialog)

@@ -30,6 +30,10 @@
 #include "SegmentedString.h"
 #include "TextResourceDecoder.h"
 
+#define LOG_TAG "LOADER"
+
+#include <utils/Log.h>
+
 namespace WebCore {
 
 DecodedDataDocumentParser::DecodedDataDocumentParser(Document* document)
@@ -39,19 +43,25 @@ DecodedDataDocumentParser::DecodedDataDocumentParser(Document* document)
 
 void DecodedDataDocumentParser::appendBytes(DocumentWriter* writer , const char* data, int length, bool shouldFlush)
 {
+    ALOGI("DecodedDataDocumentParser::appendBytes");
     if (!length && !shouldFlush)
         return;
 
     TextResourceDecoder* decoder = writer->createDecoderIfNeeded();
+    ALOGI("begin decode");
     String decoded = decoder->decode(data, length);
+    ALOGI("after decode");
     if (shouldFlush)
         decoded += decoder->flush();
     if (decoded.isEmpty())
         return;
 
+    ALOGI("writer->reportDataReceived");
     writer->reportDataReceived();
 
+    ALOGI("append decoded data");
     append(decoded);
+    ALOGI("finish DecodedDataDocumentParser::appendBytes");
 }
 
 };

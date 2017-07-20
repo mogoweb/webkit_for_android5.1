@@ -68,7 +68,15 @@ public:
     virtual bool clipOut(const IntRect& r);
     virtual bool clipOut(const Path& p);
     virtual bool clipPath(const Path& pathToClip, WindRule clipRule);
-    virtual SkIRect getTotalClipBounds() { return mCanvas->getTotalClip().getBounds(); }
+    virtual SkIRect getTotalClipBounds() {
+#if ENABLE(OLD_SKIA)
+        return mCanvas->getTotalClip().getBounds();
+#else
+        SkIRect bounds;
+        mCanvas->getClipDeviceBounds(&bounds);
+        return bounds;
+#endif
+    }
 
     // Drawing
     virtual void clearRect(const FloatRect& rect);

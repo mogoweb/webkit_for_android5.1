@@ -8,8 +8,8 @@ if [ ! "$ANDROID_BUILD_TOP" ]; then
 fi
 
 GDBSERVER_LOG=temp.log
-BROWSER_PACKAGE_NAME="com.android.browser"
-BROWSER_ACTIVITY="BrowserActivity"
+BROWSER_PACKAGE_NAME="net.mogoweb.webviewtest"
+BROWSER_ACTIVITY="MainActivity"
 # adbd get root privileges
 adb root
 sleep 5
