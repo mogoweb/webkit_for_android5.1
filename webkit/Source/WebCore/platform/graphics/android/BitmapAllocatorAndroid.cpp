@@ -26,8 +26,10 @@
 #include "config.h"
 #include "BitmapAllocatorAndroid.h"
 #include "SharedBufferStream.h"
+#if ENABLE(OLD_SKIA)
 #include "SkImageRef_GlobalPool.h"
 #include "SkImageRef_ashmem.h"
+#endif
 
 // made this up, so we don't waste a file-descriptor on small images, plus
 // we don't want to lose too much on the round-up to a page size (4K)
@@ -56,6 +58,7 @@ BitmapAllocatorAndroid::~BitmapAllocatorAndroid()
 
 bool BitmapAllocatorAndroid::allocPixelRef(SkBitmap* bitmap, SkColorTable*)
 {
+#if ENABLE(OLD_SKIA)
     SkPixelRef* ref;
     if (should_use_ashmem(*bitmap)) {
 //        SkDebugf("ashmem [%d %d]\n", bitmap->width(), bitmap->height());
@@ -66,6 +69,10 @@ bool BitmapAllocatorAndroid::allocPixelRef(SkBitmap* bitmap, SkColorTable*)
     }
     bitmap->setPixelRef(ref)->unref();
     return true;
+#else
+    //~:TODO(alex)
+    return false;
+#endif
 }
 
 }

@@ -38,7 +38,9 @@
 #include "PluginWidgetAndroid.h"
 #include "ScrollView.h"
 #include "SkANP.h"
+#if ENABLE(OLD_SKIA)
 #include "SkFlipPixelRef.h"
+#endif
 #include "SkString.h"
 #include "SkTime.h"
 #include "WebViewCore.h"
@@ -55,7 +57,9 @@
 
 PluginWidgetAndroid::PluginWidgetAndroid(WebCore::PluginView* view)
         : m_pluginView(view) {
+#if ENABLE(OLD_SKIA)
     m_flipPixelRef = NULL;
+#endif
     m_core = NULL;
     m_drawingModel = kBitmap_ANPDrawingModel;
     m_eventFlags = 0;
@@ -98,7 +102,9 @@ PluginWidgetAndroid::~PluginWidgetAndroid() {
         env->DeleteGlobalRef(m_embeddedView);
     }
 
+#if ENABLE(OLD_SKIA)
     SkSafeUnref(m_flipPixelRef);
+#endif
     SkSafeUnref(m_layer);
 }
 
@@ -149,9 +155,11 @@ void PluginWidgetAndroid::setWindow(NPWindow* window, bool isTransparent) {
     layoutSurface(boundsChanged);
 
     if (m_drawingModel != kSurface_ANPDrawingModel) {
+#if ENABLE(OLD_SKIA)
         SkSafeUnref(m_flipPixelRef);
         m_flipPixelRef = new SkFlipPixelRef(computeConfig(isTransparent),
                                             window->width, window->height);
+#endif
     }
 }
 
@@ -186,6 +194,7 @@ void PluginWidgetAndroid::checkSurfaceReady() {
 
 // returned rect is in the page coordinate
 bool PluginWidgetAndroid::isDirty(SkIRect* rect) const {
+#if ENABLE(OLD_SKIA)
     // nothing to report if we haven't had setWindow() called yet
     if (NULL == m_flipPixelRef) {
         return false;
@@ -201,10 +210,14 @@ bool PluginWidgetAndroid::isDirty(SkIRect* rect) const {
         }
         return true;
     }
+#else
+    return false;
+#endif
 }
 
 void PluginWidgetAndroid::inval(const WebCore::IntRect& rect,
                                 bool signalRedraw) {
+#if ENABLE(OLD_SKIA)
     // nothing to do if we haven't had setWindow() called yet. m_flipPixelRef
     // will also be null if this is a Surface model.
     if (NULL == m_flipPixelRef) {
@@ -216,6 +229,7 @@ void PluginWidgetAndroid::inval(const WebCore::IntRect& rect,
     if (signalRedraw && m_flipPixelRef->isDirty()) {
         m_core->invalPlugin(this);
     }
+#endif
 }
 
 void PluginWidgetAndroid::viewInvalidate() {
@@ -225,6 +239,7 @@ void PluginWidgetAndroid::viewInvalidate() {
 }
 
 void PluginWidgetAndroid::draw(PlatformGraphicsContext* context) {
+#if ENABLE(OLD_SKIA)
     if (NULL == m_flipPixelRef || !m_flipPixelRef->isDirty()) {
         return;
     }
@@ -260,6 +275,7 @@ void PluginWidgetAndroid::draw(PlatformGraphicsContext* context) {
         default:
             break;
     }
+#endif
 }
 
 void PluginWidgetAndroid::setSurfaceClip(const SkIRect& clip) {

@@ -26,6 +26,7 @@
 #ifndef InspectorCanvas_h
 #define InspectorCanvas_h
 
+#if ENABLE(OLD_SKIA)
 #include "SkBounder.h"
 #include "SkCanvas.h"
 
@@ -103,5 +104,6 @@ private:
 };
 
 } // namespace WebCore
+#endif
 
 #endif // InspectorCanvas_h

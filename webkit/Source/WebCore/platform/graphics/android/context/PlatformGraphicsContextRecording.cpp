@@ -460,7 +460,7 @@ void Recording::draw(SkCanvas* canvas)
         if (canvas->getDevice() && canvas->getDevice()->config() != SkBitmap::kNo_Config
             && count < MAX_CLIPPING_RECURSION_COUNT) {
 #else
-        if (canvas->getDevice() && canvas->getDevice()->accessBitmap.config() != SkBitmap::kNo_Config
+        if (canvas->getDevice() && canvas->getDevice()->accessBitmap(false).config() != SkBitmap::kNo_Config
             && count < MAX_CLIPPING_RECURSION_COUNT) {
 #endif
             ClippingPainter painter(recording(), context, canvas->getTotalMatrix(), nodes);

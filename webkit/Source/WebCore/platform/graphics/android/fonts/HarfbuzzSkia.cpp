@@ -201,6 +201,7 @@ HB_FontClass harfbuzzSkiaClass = {
 
 HB_Error harfbuzzSkiaGetTable(void* voidface, const HB_Tag tag, HB_Byte* buffer, HB_UInt* len)
 {
+#if ENABLE(OLD_SKIA)
     FontPlatformData* font = reinterpret_cast<FontPlatformData*>(voidface);
 
     const size_t tableSize = SkFontHost::GetTableSize(font->uniqueID(), tag);
@@ -215,6 +216,9 @@ HB_Error harfbuzzSkiaGetTable(void* voidface, const HB_Tag tag, HB_Byte* buffer,
     if (*len < tableSize)
         return HB_Err_Invalid_Argument;
     SkFontHost::GetTableData(font->uniqueID(), tag, 0, tableSize, buffer);
+#else
+    //~:TODO(alex)
+#endif
     return HB_Err_Ok;
 }
 

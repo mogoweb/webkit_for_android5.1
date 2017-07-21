@@ -193,7 +193,9 @@ private:
 
     WebCore::PluginView*    m_pluginView;
     android::WebViewCore*   m_core;
+#if ENABLE(OLD_SKIA)
     SkFlipPixelRef*         m_flipPixelRef;
+#endif
     ANPDrawingModel         m_drawingModel;
     ANPEventFlags           m_eventFlags;
     NPWindow*               m_pluginWindow;

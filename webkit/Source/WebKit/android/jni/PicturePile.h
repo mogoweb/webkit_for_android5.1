@@ -43,7 +43,11 @@
 namespace WebCore {
 class Recording;
 }
+#if ENABLE(OLD_SKIA)
 typedef WebCore::Recording Picture;
+#else
+typedef WebCore::Recording WebPicture;
+#endif
 #else
 class SkPicture;
 typedef SkPicture Picture;
@@ -67,7 +71,11 @@ public:
 
 class PictureContainer {
 public:
+#if ENABLE(OLD_SKIA)
     Picture* picture;
+#else
+    WebPicture* picture;
+#endif
     IntRect area;
     bool dirty;
     RefPtr<PrerenderedInval> prerendered;
@@ -111,7 +119,11 @@ public:
 private:
     void applyWebkitInvals();
     void updatePicture(PicturePainter* painter, PictureContainer& container);
+#if ENABLE(OLD_SKIA)
     Picture* recordPicture(PicturePainter* painter, PictureContainer& container);
+#else
+    WebPicture* recordPicture(PicturePainter* painter, PictureContainer& container);
+#endif
     void appendToPile(const IntRect& inval, const IntRect& originalInval = IntRect());
     void drawWithClipRecursive(SkCanvas* canvas, int index);
     void drawPicture(SkCanvas* canvas, PictureContainer& pc);

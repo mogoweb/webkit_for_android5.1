@@ -35,9 +35,14 @@
 #include "DumpLayer.h"
 #include "Frame.h"
 #include "GLWebViewState.h"
+#if ENABLE(OLD_SKIA)
 //~: #include "GraphicsJNI.h"
 // because skia not compatible with the android 5.1, so we cannot include GraphicsJNI.h directly.
 #include "OldGraphicsJNI.h"
+#else
+#include "GraphicsJNI.h"
+#include "SkPictureRecorder.h"
+#endif
 #include "HTMLInputElement.h"
 #include "IntPoint.h"
 #include "IntRect.h"
@@ -530,8 +535,13 @@ void copyBaseContentToPicture(SkPicture* picture)
     if (!m_baseLayer || !m_baseLayer->content())
         return;
     LayerContent* content = m_baseLayer->content();
+#if ENABLE(OLD_SKIA)
     SkCanvas* canvas = picture->beginRecording(content->width(), content->height(),
                                               SkPicture::kUsePathBoundsForClip_RecordingFlag);
+#else
+    SkPictureRecorder recorder;
+    SkCanvas* canvas = recorder.beginRecording(content->width(), content->height());
+#endif 
 
     // clear the BaseLayerAndroid's previous matrix (set at each draw)
     SkMatrix baseMatrix;
@@ -540,7 +550,11 @@ void copyBaseContentToPicture(SkPicture* picture)
 
     m_baseLayer->draw(canvas, 0);
 
+#if ENABLE(OLD_SKIA)
     picture->endRecording();
+#else
+    SkPicture* pic = recorder.endRecording();
+#endif
 }
 
 bool hasContent() {
@@ -1009,9 +1023,18 @@ static jboolean nativeDumpLayerContentToPicture(JNIEnv *env, jobject obj, jint i
     if (layer && layer->subclassName() == classname) {
         LayerContent* content = layer->content();
         if (content) {
+#if ENABLE(OLD_SKIA)
             SkCanvas* canvas = picture->beginRecording(content->width(), content->height());
+#else
+            SkPictureRecorder recorder;
+            SkCanvas* canvas = recorder.beginRecording(content->width(), content->height());
+#endif
             content->draw(canvas);
+#if ENABLE(OLD_SKIA)
             picture->endRecording();
+#else
+            SkPicture* picture = recorder.endRecording();
+#endif
             success = true;
         }
     }

@@ -96,12 +96,20 @@ PassRefPtr<Image> ImageBuffer::copyImage() const
     if (!canvas)
       return 0;
 
+#if defined(USES_OLD_SKIA)
     SkDevice* device = canvas->getDevice();
+#else
+    SkBaseDevice* device = canvas->getDevice();
+#endif
     const SkBitmap& orig = device->accessBitmap(false);
 
     SkBitmap copy;
     if (PlatformBridge::canSatisfyMemoryAllocation(orig.getSize()))
+#if defined(USE_OLD_SKIA)
         orig.copyTo(&copy, orig.config());
+#else
+        orig.copyTo(&copy);
+#endif
 
     SkBitmapRef* ref = new SkBitmapRef(copy);
     RefPtr<Image> image = BitmapImage::create(ref, 0);

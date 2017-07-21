@@ -69,10 +69,14 @@ void SimpleFontData::platformInit()
         static const uint32_t vheaTag = SkSetFourByteTag('v', 'h', 'e', 'a');
         static const uint32_t vorgTag = SkSetFourByteTag('V', 'O', 'R', 'G');
         const SkFontID fontID = m_platformData.uniqueID();
+#if ENABLE(OLD_SKIA)
         size_t vheaSize = SkFontHost::GetTableSize(fontID, vheaTag);
         size_t vorgSize = SkFontHost::GetTableSize(fontID, vorgTag);
         if ((vheaSize > 0) || (vorgSize > 0))
             m_hasVerticalGlyphs = true;
+#else
+        //~:TODO(alex)
+#endif
     }
 }
 

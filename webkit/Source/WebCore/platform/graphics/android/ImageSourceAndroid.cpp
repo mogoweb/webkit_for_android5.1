@@ -37,12 +37,18 @@
 
 #include "SkBitmapRef.h"
 #include "SkImageDecoder.h"
+#if ENABLE(OLD_SKIA)
 #include "SkImageRef.h"
+#else
+#include "SkPixelRef.h"
+#endif
 #include "SkStream.h"
 #include "SkTemplates.h"
 
 #ifdef ANDROID_ANIMATED_GIF
+#if ENABLE(OLD_SKIA)
     #include "EmojiFont.h"
+#endif
     #include "GIFImageDecoder.h"
 
     using namespace android;
@@ -172,8 +178,12 @@ static bool should_use_animated_gif(int width, int height) {
 #ifdef ANDROID_LARGE_MEMORY_DEVICE
     return true;
 #else
+#if ENABLE(OLD_SKIA)
     return EmojiFont::IsAvailable() &&
            width <= 32 && height <= 32;
+#else
+    return false;
+#endif
 #endif
 }
 #endif
@@ -206,7 +216,9 @@ void ImageSource::setData(SharedBuffer* data, bool allDataReceived)
             return;
 
         SkAutoTDelete<SkImageDecoder> ad(codec);
+#if ENABLE(OLD_SKIA)
         codec->setPrefConfigTable(gPrefConfigTable);
+#endif
         if (!codec->decode(&stream, &tmp, SkImageDecoder::kDecodeBounds_Mode))
             return;
 

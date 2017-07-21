@@ -103,11 +103,19 @@ void PicturePile::drawWithClipRecursive(SkCanvas* canvas, int index)
     PictureContainer& pc = m_pile[index];
     if (pc.picture && !canvas->quickReject(pc.area)) {
         int saved = canvas->save(SkCanvas::kClip_SaveFlag);
+#if ENABLE(OLD_SKIA)
         if (canvas->clipRect(pc.area, SkRegion::kDifference_Op))
+#else
+        canvas->clipRect(pc.area, SkRegion::kDifference_Op);
+#endif
             drawWithClipRecursive(canvas, index - 1);
         canvas->restoreToCount(saved);
         saved = canvas->save(SkCanvas::kClip_SaveFlag);
+#if ENABLE(OLD_SKIA)
         if (canvas->clipRect(pc.area))
+#else
+        canvas->clipRect(pc.area);
+#endif
             drawPicture(canvas, pc);
         canvas->restoreToCount(saved);
     } else
@@ -180,7 +188,11 @@ void PicturePile::updatePicturesIfNeeded(PicturePainter* painter)
 void PicturePile::updatePicture(PicturePainter* painter, PictureContainer& pc)
 {
     TRACE_METHOD();
+#if ENABLE(OLD_SKIA)
     Picture* picture = recordPicture(painter, pc);
+#else
+    WebPicture* picture = recordPicture(painter, pc);
+#endif
     SkSafeUnref(pc.picture);
     pc.picture = picture;
     pc.dirty = false;
@@ -304,7 +316,11 @@ void PicturePile::drawPicture(SkCanvas* canvas, PictureContainer& pc)
     pc.picture->draw(canvas);
 }
 
+#if ENABLE(OLD_SKIA)
 Picture* PicturePile::recordPicture(PicturePainter* painter, PictureContainer& pc)
+#else
+WebPicture* PicturePile::recordPicture(PicturePainter* painter, PictureContainer& pc)
+#endif
 {
     pc.prerendered.clear(); // TODO: Support? Not needed?
 

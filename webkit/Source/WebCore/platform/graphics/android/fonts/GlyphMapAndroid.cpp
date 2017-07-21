@@ -26,7 +26,9 @@
 
 #include "config.h"
 
+#if ENABLE(OLD_SKIA)
 #include "EmojiFont.h"
+#endif
 #include "Font.h"
 #include "GlyphPageTreeNode.h"
 #include "HarfbuzzSkia.h"
@@ -143,6 +145,7 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
 
     // search for emoji. If we knew for sure that buffer was a contiguous range
     // of chars, we could quick-reject the range to avoid this loop (usually)
+#if ENABLE(OLD_SKIA)
     if (EmojiFont::IsAvailable()) {
         const UChar* curr = textBuffer;
         for (unsigned i = 0; i < length; i++) {
@@ -154,7 +157,9 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
             setGlyphDataForIndex(offset + i, glyphID, fontData);
             allGlyphs |= glyphID;
         }
-    } else {
+    } else
+#endif
+    {
         for (unsigned i = 0; i < length; i++) {
             uint16_t glyphID = glyphs[i];
             setGlyphDataForIndex(offset + i, glyphID, fontData);

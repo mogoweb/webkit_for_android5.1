@@ -177,12 +177,22 @@ void PlatformGraphicsContextSkia::canvasClip(const Path& path)
 
 bool PlatformGraphicsContextSkia::clip(const FloatRect& rect)
 {
+#if ENABLE(OLD_SKIA)
     return mCanvas->clipRect(rect);
+#else
+    mCanvas->clipRect(rect);
+    return true;
+#endif
 }
 
 bool PlatformGraphicsContextSkia::clip(const Path& path)
 {
+#if ENABLE(OLD_SKIA)
     return mCanvas->clipPath(*path.platformPath(), SkRegion::kIntersect_Op, true);
+#else
+    mCanvas->clipPath(*path.platformPath(), SkRegion::kIntersect_Op, true);
+    return true;
+#endif
 }
 
 bool PlatformGraphicsContextSkia::clipConvexPolygon(size_t numPoints,
@@ -198,12 +208,22 @@ bool PlatformGraphicsContextSkia::clipConvexPolygon(size_t numPoints,
 
 bool PlatformGraphicsContextSkia::clipOut(const IntRect& r)
 {
+#if ENABLE(OLD_SKIA)
     return mCanvas->clipRect(r, SkRegion::kDifference_Op);
+#else
+    mCanvas->clipRect(r, SkRegion::kDifference_Op);
+    return true;
+#endif
 }
 
 bool PlatformGraphicsContextSkia::clipOut(const Path& path)
 {
+#if ENABLE(OLD_SKIA)
     return mCanvas->clipPath(*path.platformPath(), SkRegion::kDifference_Op);
+#else
+    mCanvas->clipPath(*path.platformPath(), SkRegion::kDifference_Op);
+    return true;
+#endif
 }
 
 bool PlatformGraphicsContextSkia::clipPath(const Path& pathToClip, WindRule clipRule)
@@ -211,7 +231,12 @@ bool PlatformGraphicsContextSkia::clipPath(const Path& pathToClip, WindRule clip
     SkPath path = *pathToClip.platformPath();
     path.setFillType(clipRule == RULE_EVENODD
             ? SkPath::kEvenOdd_FillType : SkPath::kWinding_FillType);
+#if ENABLE(OLD_SKIA)
     return mCanvas->clipPath(path);
+#else
+    mCanvas->clipPath(path);
+    return true;
+#endif
 }
 
 void PlatformGraphicsContextSkia::clearRect(const FloatRect& rect)
@@ -330,7 +355,11 @@ void PlatformGraphicsContextSkia::drawFocusRing(const Vector<IntRect>& rects,
 
     paint.setColor(color.rgb());
     paint.setStrokeWidth(focusRingOutset * 2);
+#if ENABLE(OLD_SKIA)
     paint.setPathEffect(new SkCornerPathEffect(focusRingOutset * 2))->unref();
+#else
+    paint.setPathEffect(SkCornerPathEffect::Create(focusRingOutset * 2))->unref();
+#endif
     focusRingRegion.getBoundaryPath(&path);
     mCanvas->drawPath(path, paint);
 }

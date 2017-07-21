@@ -60,9 +60,13 @@ SkBitmap* webcoreImageToSkBitmap(WebCore::Image* icon)
     if (!buffer)
         return 0;
     SkBitmap* bm = new SkBitmap;
+#if ENABLE(OLD_SKIA)
     if (!SkImageDecoder::DecodeMemory(buffer->data(), buffer->size(), bm,
                                       SkBitmap::kNo_Config,
                                       SkImageDecoder::kDecodePixels_Mode)
+#else
+    if (!SkImageDecoder::DecodeMemory(buffer->data(), buffer->size(), bm)
+#endif    
             || bm->isNull() || !bm->width() || !bm->height()
             || bm->config() == SkBitmap::kNo_Config) {
         delete bm;

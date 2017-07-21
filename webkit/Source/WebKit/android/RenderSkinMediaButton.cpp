@@ -122,7 +122,11 @@ void RenderSkinMediaButton::Draw(SkCanvas* canvas, const IntRect& r,
     SkColor backgroundColor = SkColorSetARGB(alpha, 34, 34, 34);
     SkColor trackBackgroundColor = SkColorSetARGB(255, 100, 100, 100);
     paint.setColor(backgroundColor);
+#if ENABLE(OLD_SKIA)
     paint.setFlags(SkPaint::kFilterBitmap_Flag);
+#else
+    //~:TOOD(alex)
+#endif
 
     switch (buttonType) {
     case PAUSE:

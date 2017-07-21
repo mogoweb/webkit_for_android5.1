@@ -112,8 +112,13 @@ static bool setupForText(SkPaint* paint, GraphicsContext* gc,
     bool hasBothStrokeAndFill =
         (mode & (TextModeStroke | TextModeFill)) == (TextModeStroke | TextModeFill);
     if (hasShadow || hasBothStrokeAndFill) {
+#if ENABLE(OLD_SKIA)
         SkLayerDrawLooper* looper = new SkLayerDrawLooper;
         paint->setLooper(looper)->unref();
+#else
+        SkLayerDrawLooper::Builder looperBuilder;
+        paint->setLooper(looperBuilder.detachLooper())->unref();
+#endif
 
         // The layerDrawLooper uses at the root paint to determine the text
         // encoding so we need to make sure it is properly configured.
@@ -123,7 +128,9 @@ static bool setupForText(SkPaint* paint, GraphicsContext* gc,
         SkLayerDrawLooper::LayerInfo info;
         info.fPaintBits = SkLayerDrawLooper::kEntirePaint_Bits;
         info.fColorMode = SkXfermode::kSrc_Mode;
+#if ENABLE(OLD_SKIA)
         info.fFlagsMask = SkPaint::kAllFlags;
+#endif
 
         // The paint is only valid until the looper receives another call to
         // addLayer(). Therefore, we must cache certain state for later use.
@@ -132,11 +139,19 @@ static bool setupForText(SkPaint* paint, GraphicsContext* gc,
         SkScalar strokeWidth;
 
         if ((mode & TextModeStroke) && gc->willStroke()) {
+#if ENABLE(OLD_SKIA)
             strokeWidth = setupStroke(looper->addLayer(info), gc, font)->getStrokeWidth();
+#else
+            strokeWidth = setupStroke(looperBuilder.addLayer(info), gc, font)->getStrokeWidth();
+#endif
             hasStrokePaint = true;
         }
         if ((mode & TextModeFill) && gc->willFill()) {
+#if ENABLE(OLD_SKIA)
             setupFill(looper->addLayer(info), gc, font);
+#else
+            setupFill(looperBuilder.addLayer(info), gc, font);
+#endif
             hasFillPaint = true;
         }
 
@@ -148,7 +163,11 @@ static bool setupForText(SkPaint* paint, GraphicsContext* gc,
                 // add an offset to the looper when creating a shadow layer
                 info.fOffset.set(offset.fX, offset.fY);
 
+#if ENABLE(OLD_SKIA)
                 SkPaint* p = looper->addLayer(info);
+#else
+                SkPaint* p = looperBuilder.addLayer(info);
+#endif
                 *p = shadowPaint;
 
                 // Currently, only GraphicsContexts associated with the
@@ -747,6 +766,7 @@ const FontPlatformData* TextRunWalker::setupComplexFont(
 
 void TextRunWalker::setupFontForScriptRun()
 {
+#if ENABLE(OLD_SKIA)
     const FontData* fontData = m_font->glyphDataForCharacter(m_run[0], false).fontData;
     const FontPlatformData& platformData =
         fontData->fontDataForCharacter(' ')->platformData();
@@ -764,6 +784,9 @@ void TextRunWalker::setupFontForScriptRun()
     int scale = devicePixelFraction * size * multiplyFor16Dot16 / complexPlatformData->emSizeInFontUnits();
     m_item.font->x_scale = scale;
     m_item.font->y_scale = scale;
+#else
+    //~:TODO(alex)
+#endif
 }
 
 HB_FontRec* TextRunWalker::allocHarfbuzzFont()

@@ -164,8 +164,12 @@ int FontPlatformData::emSizeInFontUnits() const
         return m_emSizeInFontUnits;
 
     SkAdvancedTypefaceMetrics* metrics = 0;
+#if ENABLE(OLD_SKIA)
     if (m_typeface)
         metrics = m_typeface->getAdvancedTypefaceMetrics(SkAdvancedTypefaceMetrics::kNo_PerGlyphInfo);
+#else
+    //~:TODO(alex)
+#endif
     if (metrics) {
         m_emSizeInFontUnits = metrics->fEmSize;
         metrics->unref();
@@ -213,7 +217,11 @@ void FontPlatformData::setupPaint(SkPaint* paint) const
     paint->setTextSize(SkFloatToScalar(m_textSize));
     paint->setFakeBoldText(m_fakeBold);
     paint->setTextSkewX(m_fakeItalic ? -SK_Scalar1/4 : 0);
+#if ENABLE(OLD_SKIA)
     paint->setLanguage(s_defaultLanguage);
+#else
+    //~:TODO(alex)
+#endif
 #ifndef SUPPORT_COMPLEX_SCRIPTS
     paint->setTextEncoding(SkPaint::kUTF16_TextEncoding);
 #endif
@@ -258,7 +266,11 @@ unsigned FontPlatformData::hash() const
 bool FontPlatformData::isFixedPitch() const
 {
     if (m_typeface && (m_typeface != hashTableDeletedFontValue()))
+#if ENABLE(OLD_SKIA)
         return m_typeface->isFixedWidth();
+#else
+        return m_typeface->isFixedPitch();
+#endif
     else
         return false;
 }

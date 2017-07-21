@@ -7,6 +7,9 @@
 #include "AndroidLog.h"
 #include "SkCanvas.h"
 #include "SkPicture.h"
+#if !ENABLE(OLD_SKIA)
+#include "SkPictureRecorder.h"
+#endif
 
 namespace WebCore {
 
@@ -31,11 +34,18 @@ void PicturePileLayerContent::serialize(SkWStream* stream)
 {
     if (!stream)
        return;
+#if ENABLE(OLD_SKIA)
     SkPicture picture;
     draw(picture.beginRecording(width(), height(),
                                 SkPicture::kUsePathBoundsForClip_RecordingFlag));
     picture.endRecording();
     picture.serialize(stream);
+#else
+    SkPictureRecorder recorder;
+    draw(recorder.beginRecording(width(), height()));
+    SkPicture* picture = recorder.endRecording();
+    picture->serialize(stream);
+#endif
 }
 
 PrerenderedInval* PicturePileLayerContent::prerenderForRect(const IntRect& dirty)

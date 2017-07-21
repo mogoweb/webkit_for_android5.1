@@ -168,8 +168,12 @@ bool PlatformGraphicsContext::State::setupShadowPaint(SkPaint* paint, SkPoint* o
     }
 
     if (shadow.blur > 0) {
+#if ENABLE(OLD_SKIA)
         paint->setMaskFilter(SkBlurMaskFilter::Create(shadow.blur,
                              SkBlurMaskFilter::kNormal_BlurStyle, flags))->unref();
+#else
+        //~:TODO(alex)
+#endif
     }
     return SkColorGetA(shadow.color) && (shadow.blur || shadow.dx || shadow.dy);
 }
@@ -304,7 +308,11 @@ void PlatformGraphicsContext::setLineDash(const DashArray& dashes, float dashOff
         intervals[i] = SkFloatToScalar(dashes[i % dashLength]);
     SkPathEffect **effectPtr = &m_state->pathEffect;
     SkSafeUnref(*effectPtr);
+#if ENABLE(OLD_SKIA)
     *effectPtr = new SkDashPathEffect(intervals, count, SkFloatToScalar(dashOffset));
+#else
+    //~:TODO(alex)
+#endif
 
     delete[] intervals;
 }
@@ -402,12 +410,16 @@ void PlatformGraphicsContext::setupPaintCommon(SkPaint* paint) const
             flags |= SkBlurDrawLooper::kOverrideColor_BlurFlag;
         }
 
+#if ENABLE(OLD_SKIA)
         SkDrawLooper* looper = new SkBlurDrawLooper(m_state->shadow.blur,
                                                     m_state->shadow.dx,
                                                     dy,
                                                     m_state->shadow.color,
                                                     flags);
         paint->setLooper(looper)->unref();
+#else
+        //~://TODO(alex)
+#endif
     }
     paint->setFilterBitmap(true);
 }
