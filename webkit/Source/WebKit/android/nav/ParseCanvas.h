@@ -33,7 +33,11 @@ namespace android {
 class ParseCanvas : public SkCanvas {
 protected:
     virtual ~ParseCanvas() {
+#if ENABLE(OLD_SKIA)
         setBounder(0);
+#else
+        //~:TODO(alex)
+#endif
     }
 
     // Pictures parsed for content never want to create offscreen bitmaps.

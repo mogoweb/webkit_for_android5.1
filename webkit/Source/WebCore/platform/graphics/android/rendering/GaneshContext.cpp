@@ -60,8 +60,12 @@ GaneshContext* GaneshContext::instance()
 
 GrContext* GaneshContext::getGrContext()
 {
+#if ENABLE(OLD_SKIA)
     if (!m_grContext)
         m_grContext = GrContext::Create(kOpenGL_Shaders_GrEngine, 0);
+#else
+    //~:TODO(alex)
+#endif
     return m_grContext;
 }
 
@@ -149,6 +153,7 @@ SkDevice* GaneshContext::getDeviceForTile(const TileRenderInfo& renderInfo)
 
     if (!m_tileDeviceSurface) {
 
+#if ENABLE(OLD_SKIA)
         GrPlatformRenderTargetDesc renderTargetDesc;
         renderTargetDesc.fWidth = TilesManager::tileWidth();
         renderTargetDesc.fHeight = TilesManager::tileHeight();
@@ -163,6 +168,9 @@ SkDevice* GaneshContext::getDeviceForTile(const TileRenderInfo& renderInfo)
         m_tileDeviceSurface = new SkGpuDevice(grContext, renderTarget);
         renderTarget->unref();
         ALOGV("generated device %p", m_tileDeviceSurface);
+#else
+        //~:TODO(alex)
+#endif
     }
 
     GLUtils::checkGlError("getDeviceForTile");
@@ -172,7 +180,12 @@ SkDevice* GaneshContext::getDeviceForTile(const TileRenderInfo& renderInfo)
     if (m_tileDeviceSurface && contextNeedsReset)
         getGrContext()->resetContext();
 
+#if ENABLE(OLD_SKIA)
     return m_tileDeviceSurface;
+#else
+    //~:TODO(alex)
+    return NULL;
+#endif
 }
 
 

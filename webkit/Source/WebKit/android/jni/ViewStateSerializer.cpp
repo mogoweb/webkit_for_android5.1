@@ -42,7 +42,9 @@
 #include "ScrollableLayerAndroid.h"
 #include "SkData.h"
 #include "SkOrderedReadBuffer.h"
+#if ENABLE(OLD_SKIA)
 #include "SkOrderedWriteBuffer.h"
+#endif
 #include "SkPicture.h"
 #include "TilesManager.h"
 
@@ -185,9 +187,13 @@ static BaseLayerAndroid* nativeDeserializeViewState(JNIEnv* env, jobject, jint v
     if (version == 1) {
         content = new LegacyPictureLayerContent(&stream);
     } else {
+#if ENABLE(OLD_SKIA)
         SkPicture* picture = new SkPicture(&stream);
         content = new PictureLayerContent(picture);
         SkSafeUnref(picture);
+#else
+        //~:TODO(alex)
+#endif
     }
 
     BaseLayerAndroid* layer = new BaseLayerAndroid(content);
@@ -410,6 +416,7 @@ void serializeLayer(LayerAndroid* layer, SkWStream* stream)
     bool hasContentsImage = layer->m_imageCRC != 0;
     stream->writeBool(hasContentsImage);
     if (hasContentsImage) {
+#if ENABLE(OLD_SKIA)
         SkOrderedWriteBuffer buffer(1024);
         buffer.setFlags(SkFlattenableWriteBuffer::kCrossProcess_Flag);
         ImageTexture* imagetexture =
@@ -419,6 +426,9 @@ void serializeLayer(LayerAndroid* layer, SkWStream* stream)
         ImagesManager::instance()->releaseImage(layer->m_imageCRC);
         stream->write32(buffer.size());
         buffer.writeToStream(stream);
+#else
+        //~:TODO(alex)
+#endif
     }
     bool hasRecordingPicture = layer->m_content != 0 && !layer->m_content->isEmpty();
     stream->writeBool(hasRecordingPicture);
@@ -531,7 +541,11 @@ LayerAndroid* deserializeLayer(int version, SkMemoryStream* stream)
         stream->read(storage.get(), size);
         SkOrderedReadBuffer buffer(storage.get(), size);
         SkBitmap contentsImage;
+#if ENABLE(OLD_SKIA)
         contentsImage.unflatten(buffer);
+#else
+        //~:TODO(alex)
+#endif
         SkBitmapRef* imageRef = new SkBitmapRef(contentsImage);
         layer->setContentsImage(imageRef);
         delete imageRef;
@@ -542,9 +556,13 @@ LayerAndroid* deserializeLayer(int version, SkMemoryStream* stream)
         if (version == 1) {
             content = new LegacyPictureLayerContent(stream);
         } else {
+#if ENABLE(OLD_SKIA)
             SkPicture* picture = new SkPicture(stream);
             content = new PictureLayerContent(picture);
             SkSafeUnref(picture);
+#else
+            //~:TODO(alex)
+#endif
         }
         layer->setContent(content);
         SkSafeUnref(content);

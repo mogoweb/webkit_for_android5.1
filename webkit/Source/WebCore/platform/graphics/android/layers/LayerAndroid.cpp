@@ -806,7 +806,12 @@ bool LayerAndroid::drawCanvas(SkCanvas* canvas, bool drawChildren, PaintStyle st
         r.set(m_clippingRect.x(), m_clippingRect.y(),
               m_clippingRect.x() + m_clippingRect.width(),
               m_clippingRect.y() + m_clippingRect.height());
+#if ENABLE(OLD_SKIA)
         if (canvas->clipRect(r)) {
+#else
+        canvas->clipRect(r);
+        {
+#endif
             SkMatrix matrix;
             GLUtils::toSkMatrix(matrix, m_drawTransform);
             SkMatrix canvasMatrix = canvas->getTotalMatrix();

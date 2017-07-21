@@ -32,6 +32,7 @@
 #include "AndroidLog.h"
 #include "SkPicture.h"
 
+#if ENABLE(OLD_SKIA)
 namespace WebCore {
 
 
@@ -139,3 +140,6 @@ void InspectorCanvas::drawTextOnPath(const void*, size_t byteLength,
 }
 
 } // namespace WebCore
+#else
+//~:TODO(alex)
+#endif

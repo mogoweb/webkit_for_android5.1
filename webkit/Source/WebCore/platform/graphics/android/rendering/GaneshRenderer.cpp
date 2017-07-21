@@ -81,7 +81,11 @@ void GaneshRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
     }
 
     // set the GPU device to the canvas
+#if ENABLE(OLD_SKIA)
     canvas->setDevice(device);
+#else
+    //~:TODO(alex)
+#endif
 }
 
 void GaneshRenderer::renderingComplete(const TileRenderInfo& renderInfo, SkCanvas* canvas)

@@ -87,10 +87,14 @@ ImageTexture::ImageTexture(SkBitmap* bmp, unsigned crc)
 
     // Create a picture containing the image (needed for TileGrid)
     m_picture = new SkPicture();
+#if ENABLE(OLD_SKIA)
     SkCanvas* pcanvas = m_picture->beginRecording(m_image->width(), m_image->height());
     pcanvas->clear(SkColorSetARGBInline(0, 0, 0, 0));
     pcanvas->drawBitmap(*m_image, 0, 0);
     m_picture->endRecording();
+#else
+    //~:TODO(alex)
+#endif
 }
 
 ImageTexture::~ImageTexture()
@@ -116,7 +120,9 @@ SkBitmap* ImageTexture::convertBitmap(SkBitmap* bitmap)
     SkCanvas canvas(*img);
     SkRect dest;
     dest.set(0, 0, w, h);
+#if ENABLE(OLD_SKIA)
     img->setIsOpaque(false);
+#endif
     img->eraseARGB(0, 0, 0, 0);
     canvas.drawBitmapRect(*bitmap, 0, dest);
 
@@ -230,7 +236,11 @@ bool ImageTexture::paint(SkCanvas* canvas)
     }
 
     ALOGV("IT %p painting with picture %p", this, m_picture);
+#if ENABLE(OLD_SKIA)
     canvas->drawPicture(*m_picture);
+#else
+    //~:TODO(alex)
+#endif
 
     return true;
 }

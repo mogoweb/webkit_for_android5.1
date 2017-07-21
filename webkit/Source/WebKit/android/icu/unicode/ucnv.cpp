@@ -32,18 +32,22 @@
 #include "config.h"
 // END android-added
 
+#if ENABLE(OLD_SKIA)
 #include "EmojiFont.h"
+#endif
 #include <icu/icu4c/source/common/unicode/ucnv.h>
 
 namespace android {
 
 U_STABLE UConverter* U_EXPORT2
 ucnv_open_emoji(const char *converterName, UErrorCode *err) {
+#if ENABLE(OLD_SKIA)
     if (EmojiFont::IsAvailable()) {
         if (strcmp(converterName, "Shift_JIS") == 0) {
             converterName = EmojiFont::GetShiftJisConverterName();
         }
     }
+#endif
     return ucnv_open(converterName, err);
 }
 

@@ -69,31 +69,56 @@ public:
     virtual bool translate(SkScalar dx, SkScalar dy)
     {
         WRAPCANVAS_LOG_ENTRY("");
+#if ENABLE(OLD_SKIA)
         return SkCanvas::translate(dx, dy);
+#else
+        SkCanvas::translate(dx, dy);
+        return true;
+#endif
     }
 
     virtual bool scale(SkScalar sx, SkScalar sy)
     {
         WRAPCANVAS_LOG_ENTRY("");
+#if ENABLE(OLD_SKIA)
         return SkCanvas::scale(sx, sy);
+#else
+        SkCanvas::scale(sx, sy);
+        return true;
+#endif
     }
 
     virtual bool rotate(SkScalar degrees)
     {
         WRAPCANVAS_LOG_ENTRY("");
+#if ENABLE(OLD_SKIA)
         return SkCanvas::rotate(degrees);
+#else
+        SkCanvas::rotate(degrees);
+        return true;
+#endif
     }
 
     virtual bool skew(SkScalar sx, SkScalar sy)
     {
         WRAPCANVAS_LOG_ENTRY("");
+#if ENABLE(OLD_SKIA)
         return SkCanvas::skew(sx, sy);
+#else
+        SkCanvas::skew(sx, sy);
+        return true;
+#endif
     }
 
     virtual bool concat(const SkMatrix& matrix)
     {
         WRAPCANVAS_LOG_ENTRY("");
+#if ENABLE(OLD_SKIA)
         return SkCanvas::concat(matrix);
+#else
+        SkCanvas::concat(matrix);
+        return true;
+#endif
     }
 
     virtual void setMatrix(const SkMatrix& matrix)
@@ -105,14 +130,24 @@ public:
     virtual bool clipRect(const SkRect& rect, SkRegion::Op op)
     {
         WRAPCANVAS_LOG_ENTRY("");
+#if ENABLE(OLD_SKIA)
         return SkCanvas::clipRect(rect, op);
+#else
+        SkCanvas::clipRect(rect, op);
+        return true;
+#endif
     }
 
     virtual bool clipPath(const SkPath& path, SkRegion::Op op)
     {
         WRAPCANVAS_LOG_ENTRY("");
         m_isSolidColor = false;
+#if ENABLE(OLD_SKIA)
         return SkCanvas::clipPath(path, op);
+#else
+        SkCanvas::clipPath(path, op);
+        return true;
+#endif
     }
 
     virtual bool clipRegion(const SkRegion& region, SkRegion::Op op)
@@ -120,7 +155,12 @@ public:
         WRAPCANVAS_LOG_ENTRY("");
         if (!region.isRect())
             m_isSolidColor = false;
+#if ENABLE(OLD_SKIA)
         return SkCanvas::clipRegion(region, op);
+#else
+        SkCanvas::clipRegion(region, op);
+        return true;
+#endif
     }
 
     virtual void clear(SkColor color)
@@ -263,7 +303,11 @@ public:
     {
         WRAPCANVAS_LOG_ENTRY("");
         m_isSolidColor = false;
+#if ENABLE(OLD_SKIA)
         SkCanvas::drawPicture(picture);
+#else
+        //~:TODO(alex)
+#endif
     }
 
     virtual void drawVertices(VertexMode mode, int vertexCount,

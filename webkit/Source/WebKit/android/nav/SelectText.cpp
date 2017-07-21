@@ -33,7 +33,9 @@
 #include "LayerAndroid.h"
 #include "SelectText.h"
 #include "SkBitmap.h"
+#if ENABLE(OLD_SKIA)
 #include "SkBounder.h"
+#endif
 #include "SkCanvas.h"
 #include "SkPicture.h"
 #include "SkPoint.h"

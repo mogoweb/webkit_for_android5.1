@@ -67,7 +67,11 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
     TRACE_METHOD();
 
     if (renderInfo.baseTile->isLayerTile()) {
+#if ENABLE(OLD_SKIA)
         m_bitmap.setIsOpaque(false);
+#else
+        //~:TODO(alex)
+#endif
 
         // clear bitmap if necessary
         if (!m_bitmapIsPureColor || m_bitmapPureColor != Color::transparent)
@@ -80,7 +84,11 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
             background = &defaultBackground;
         }
         ALOGV("setupCanvas use background on Base Layer %x", background->rgb());
+#if ENABLE(OLD_SKIA)
         m_bitmap.setIsOpaque(!background->hasAlpha());
+#else
+        //~:TODO(alex)
+#endif
 
         // fill background color if necessary
         if (!m_bitmapIsPureColor || m_bitmapPureColor != *background)
@@ -88,11 +96,15 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
                                background->green(), background->blue());
     }
 
+#if ENABLE(OLD_SKIA)
     SkDevice* device = new SkDevice(m_bitmap);
 
     canvas->setDevice(device);
 
     device->unref();
+#else
+        //~:TODO(alex)
+#endif
 }
 
 void RasterRenderer::renderingComplete(const TileRenderInfo& renderInfo, SkCanvas* canvas)

@@ -66,6 +66,7 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     SkAutoTDelete<SkImageDecoder> add(decoder);
 
     decoder->setPeeker(&peeker);
+#if ENABLE(OLD_SKIA)
     if (!decoder->decode(&stream, &ninepatch->m_bitmap, prefConfig, mode, true)) {
         asset->close();
         ALOGE("RenderSkinNinePatch::Failed to decode nine patch asset");
@@ -73,7 +74,6 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     }
 
     asset->close();
-#if 0  //~:
     if (!peeker.fPatch) {
         ALOGE("RenderSkinNinePatch::Patch data not valid");
         return false;
@@ -81,7 +81,9 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     void** data = &ninepatch->m_serializedPatchData;
     *data = malloc(peeker.fPatch->serializedSize());
     peeker.fPatch->serialize(*data);
-#endif  //~:
+#else
+    //~:TODO(alex)
+#endif
     return true;
 }
 

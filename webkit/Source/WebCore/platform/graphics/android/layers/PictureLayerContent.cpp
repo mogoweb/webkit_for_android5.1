@@ -65,6 +65,7 @@ float PictureLayerContent::maxZoomScale()
     bitmap.setConfig(SkBitmap::kARGB_8888_Config,
                      m_picture->width(),
                      m_picture->height());
+#if ENABLE(OLD_SKIA)
     InspectorBounder inspectorBounder;
     InspectorCanvas checker(&inspectorBounder, m_picture, bitmap);
     checker.drawPicture(*m_picture);
@@ -75,6 +76,9 @@ float PictureLayerContent::maxZoomScale()
         SkSafeUnref(m_picture);
         m_picture = 0;
     }
+#else
+    //~:TODO(alex)
+#endif
 
     m_checkedContent = true;
 
@@ -90,7 +94,11 @@ void PictureLayerContent::draw(SkCanvas* canvas)
     android::Mutex::Autolock lock(m_drawLock);
     SkRect r = SkRect::MakeWH(width(), height());
     canvas->clipRect(r);
+#if ENABLE(OLD_SKIA)
     canvas->drawPicture(*m_picture);
+#else
+    //~:TODO(alex)
+#endif
 }
 
 void PictureLayerContent::serialize(SkWStream* stream)

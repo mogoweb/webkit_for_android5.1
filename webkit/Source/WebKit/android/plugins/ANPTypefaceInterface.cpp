@@ -60,8 +60,13 @@ static ANPTypefaceStyle anp_getStyle(const ANPTypeface* tf) {
 
 static int32_t anp_getFontPath(const ANPTypeface* tf, char fileName[],
                                int32_t length, int32_t* index) {
+#if ENABLE(OLD_SKIA)
     size_t size = SkFontHost::GetFileName(SkTypeface::UniqueID(tf), fileName,
                                           length, index);
+#else
+    //~:TODO(alex)
+    size_t size = 0;
+#endif
     return static_cast<int32_t>(size);
 }
 
@@ -92,7 +97,7 @@ static const char* anp_getFontDirectoryPath() {
 
 void ANPTypefaceInterfaceV0_Init(ANPInterface* v) {
     ANPTypefaceInterfaceV0* i = reinterpret_cast<ANPTypefaceInterfaceV0*>(v);
-    
+
     ASSIGN(i, createFromName);
     ASSIGN(i, createFromTypeface);
     ASSIGN(i, getRefCount);

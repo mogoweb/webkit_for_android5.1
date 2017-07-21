@@ -21,7 +21,7 @@
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include "config.h"
@@ -81,7 +81,12 @@ bool ImageFrame::copyBitmapData(const ImageFrame& other)
 
     m_bitmap.reset();
     const NativeImageSkia& otherBitmap = other.m_bitmap;
+#if ENABLE(OLD_SKIA)
     return otherBitmap.copyTo(&m_bitmap, otherBitmap.config());
+#else
+    //~:TODO(alex)
+    return true;
+#endif
 }
 
 bool ImageFrame::setSize(int newWidth, int newHeight)
@@ -114,7 +119,11 @@ bool ImageFrame::hasAlpha() const
 
 void ImageFrame::setHasAlpha(bool alpha)
 {
+#if ENABLE(OLD_SKIA)
     m_bitmap.setIsOpaque(!alpha);
+#else
+    //~:TODO(alex)
+#endif
 }
 
 void ImageFrame::setColorProfile(const ColorProfile& colorProfile)
