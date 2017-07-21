@@ -1,0 +1,34 @@
+diff --git a/include/core/SkScalar.h b/include/core/SkScalar.h
+index b37cf5c..7dc5ca1 100644
+--- a/include/core/SkScalar.h
++++ b/include/core/SkScalar.h
+@@ -11,7 +11,7 @@
+ #include "SkFixed.h"
+ #include "SkFloatingPoint.h"
+ 
+-//#define SK_SUPPORT_DEPRECATED_SCALARROUND
++#define SK_SUPPORT_DEPRECATED_SCALARROUND
+ 
+ typedef float   SkScalar;
+ 
+diff --git a/include/core/SkUserConfig.h b/include/core/SkUserConfig.h
+index 06b3b43..19c8bf7 100644
+--- a/include/core/SkUserConfig.h
++++ b/include/core/SkUserConfig.h
+@@ -207,7 +207,7 @@
+ 
+ #define SK_INTERNAL
+ #define SK_GAMMA_APPLY_TO_A8
+-#define SK_SCALAR_TO_FLOAT_EXCLUDED
++// #define SK_SCALAR_TO_FLOAT_EXCLUDED
+ #define SK_ALLOW_STATIC_GLOBAL_INITIALIZERS 0
+ #define SK_SUPPORT_GPU 1
+ #define SK_SUPPORT_OPENCL 0
+@@ -240,5 +240,7 @@
+ #define GR_COMPRESS_ALPHA_MASK 0
+ #define SK_SUPPORT_PDF
+ #define SK_SUPPORT_LEGACY_SHADER_LOCALMATRIX
++#define SK_SUPPORT_LEGACY_SETCONFIG
++#define SK_SUPPORT_LEGACY_GETTOTALCLIP
+ 
+ #endif // SkUserConfig_Android_DEFINED
