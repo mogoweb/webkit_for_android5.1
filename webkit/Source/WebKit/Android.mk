@@ -1,4 +1,4 @@
-## 
+##
 ##
 ## Copyright 2008, The Android Open Source Project
 ##
@@ -64,7 +64,6 @@ LOCAL_SRC_FILES += \
 	android/jni/DeviceOrientationClientImpl.cpp \
 	android/jni/GeolocationPermissionsBridge.cpp \
 	android/jni/GeolocationServiceBridge.cpp \
-	android/jni/Graphics.cpp \
 	android/jni/JavaBridge.cpp \
 	android/jni/JavaSharedClient.cpp \
 	android/jni/MIMETypeRegistryAndroid.cpp \

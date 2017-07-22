@@ -36,7 +36,6 @@
 #include "Frame.h"
 #include "GLWebViewState.h"
 #if ENABLE(OLD_SKIA)
-//~: #include "GraphicsJNI.h"
 // because skia not compatible with the android 5.1, so we cannot include GraphicsJNI.h directly.
 #include "OldGraphicsJNI.h"
 #else
@@ -541,7 +540,7 @@ void copyBaseContentToPicture(SkPicture* picture)
 #else
     SkPictureRecorder recorder;
     SkCanvas* canvas = recorder.beginRecording(content->width(), content->height());
-#endif 
+#endif
 
     // clear the BaseLayerAndroid's previous matrix (set at each draw)
     SkMatrix baseMatrix;
@@ -1007,15 +1006,23 @@ static BaseLayerAndroid* nativeGetBaseLayer(JNIEnv *env, jobject obj, jint nativ
 
 static void nativeCopyBaseContentToPicture(JNIEnv *env, jobject obj, jobject pict)
 {
-    SkPicture* picture = NULL;//~: GraphicsJNI::getNativePicture(env, pict);
+#if ENABLE(OLD_SKIA)
+    SkPicture* picture = GraphicsJNI::getNativePicture(env, pict);
     GET_NATIVE_VIEW(env, obj)->copyBaseContentToPicture(picture);
+#else
+    //~:TODO(alex)
+#endif
 }
 
 static jboolean nativeDumpLayerContentToPicture(JNIEnv *env, jobject obj, jint instance,
                                                 jstring jclassName, jint layerId, jobject pict)
 {
     bool success = false;
-    SkPicture* picture = NULL;//~: GraphicsJNI::getNativePicture(env, pict);
+#if ENABLE(OLD_SKIA)
+    SkPicture* picture = GraphicsJNI::getNativePicture(env, pict);
+#else
+    SkPicture* picture = NULL; //~:TODO(alex)
+#endif
     std::string classname = jstringToStdString(env, jclassName);
     BaseLayerAndroid* baseLayer = reinterpret_cast<WebView*>(instance)->getBaseLayer();
     LayerAndroid* layer = baseLayer->findById(layerId);

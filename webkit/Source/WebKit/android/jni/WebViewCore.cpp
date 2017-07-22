@@ -62,9 +62,7 @@
 #include "FrameView.h"
 #include "Geolocation.h"
 #include "GraphicsContext.h"
-//~:#include "GraphicsJNI.h"
-// because skia not compatible with the android 5.1, so we cannot include GraphicsJNI.h directly.
-#include "OldGraphicsJNI.h"
+#include "GraphicsJNI.h"
 #include "HTMLAnchorElement.h"
 #include "HTMLAreaElement.h"
 #include "HTMLElement.h"
