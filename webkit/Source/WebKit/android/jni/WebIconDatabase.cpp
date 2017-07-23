@@ -29,7 +29,7 @@
 #include "WebIconDatabase.h"
 
 #include "FileSystem.h"
-// #include "GraphicsJNI.h"
+#include "GraphicsJNI.h"
 #include "IconDatabase.h"
 #include "Image.h"
 #include "IntRect.h"
@@ -66,7 +66,7 @@ SkBitmap* webcoreImageToSkBitmap(WebCore::Image* icon)
                                       SkImageDecoder::kDecodePixels_Mode)
 #else
     if (!SkImageDecoder::DecodeMemory(buffer->data(), buffer->size(), bm)
-#endif    
+#endif
             || bm->isNull() || !bm->width() || !bm->height()
             || bm->config() == SkBitmap::kNo_Config) {
         delete bm;
@@ -80,7 +80,7 @@ jobject webcoreImageToJavaBitmap(JNIEnv* env, WebCore::Image* icon)
     SkBitmap* bm = webcoreImageToSkBitmap(icon);
     if (!bm)
         return 0;
-    //~: return GraphicsJNI::createBitmap(env, bm, false, NULL);
+    return GraphicsJNI::createBitmap(env, bm, false, NULL);
     return 0;
 }
 

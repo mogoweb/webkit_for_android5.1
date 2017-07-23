@@ -38,10 +38,6 @@
 #include "PlatformGraphicsContextSkia.h"
 #include "RTree.h"
 #include "SkDevice.h"
-#if !ENABLE(OLD_SKIA)
-#include "SkScalar.h"
-#define SkFloatToScalar(n)      (n)
-#endif
 
 #include "wtf/NonCopyingSort.h"
 #include "wtf/HashSet.h"
