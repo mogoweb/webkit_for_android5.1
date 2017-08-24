@@ -28,6 +28,8 @@
 
 #if ENABLE(OLD_SKIA)
 #include "EmojiFont.h"
+#else
+#include "AndroidLog.h"
 #endif
 #include "Font.h"
 #include "FontCache.h"
@@ -76,6 +78,7 @@ void SimpleFontData::platformInit()
             m_hasVerticalGlyphs = true;
 #else
         //~:TODO(alex)
+        ALOGW("SimpleFontData::platformInit");
 #endif
     }
 }

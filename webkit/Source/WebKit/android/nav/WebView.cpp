@@ -1011,6 +1011,7 @@ static void nativeCopyBaseContentToPicture(JNIEnv *env, jobject obj, jobject pic
     GET_NATIVE_VIEW(env, obj)->copyBaseContentToPicture(picture);
 #else
     //~:TODO(alex)
+    ALOGW("nativeCopyBaseContentToPicture");
 #endif
 }
 
@@ -1021,6 +1022,7 @@ static jboolean nativeDumpLayerContentToPicture(JNIEnv *env, jobject obj, jint i
 #if ENABLE(OLD_SKIA)
     SkPicture* picture = GraphicsJNI::getNativePicture(env, pict);
 #else
+    ALOGW("nativeDumpLayerContentToPicture NOTIMPLEMENTED");
     SkPicture* picture = NULL; //~:TODO(alex)
 #endif
     std::string classname = jstringToStdString(env, jclassName);

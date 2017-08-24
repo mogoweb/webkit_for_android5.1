@@ -786,6 +786,7 @@ void TextRunWalker::setupFontForScriptRun()
     m_item.font->y_scale = scale;
 #else
     //~:TODO(alex)
+    ALOGW("TextRunWalker::setupFontForScriptRun NOTIMPLEMENTED");
 #endif
 }
 

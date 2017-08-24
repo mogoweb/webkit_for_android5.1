@@ -26,6 +26,7 @@
 
 #include "config.h"
 
+#include "AndroidLog.h"
 #include "FontPlatformData.h"
 
 #include <SkFontHost.h>
@@ -218,6 +219,7 @@ HB_Error harfbuzzSkiaGetTable(void* voidface, const HB_Tag tag, HB_Byte* buffer,
     SkFontHost::GetTableData(font->uniqueID(), tag, 0, tableSize, buffer);
 #else
     //~:TODO(alex)
+    ALOGW("harfbuzzSkiaGetTable NOTIMPLEMENTED");
 #endif
     return HB_Err_Ok;
 }

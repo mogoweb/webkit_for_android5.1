@@ -130,7 +130,13 @@ int PlatformBridge::PlatformBridge::screenDepth()
             android::ISurfaceComposer::eDisplayIdMain));
     android::DisplayInfo info;
     android::SurfaceComposerClient::getDisplayInfo(display, &info);
-    return 0;  //~: return info.pixelFormatInfo.bitsPerPixel;
+#if ENABLE(OLD_SKIA)
+    return info.pixelFormatInfo.bitsPerPixel;
+#else
+    //~: TODO(alex)
+    ALOGW("PlatformBridge::screenDepth NOTIMPLEMENTED");
+    return 0;
+#endif
 }
 
 FloatRect PlatformBridge::screenRect()

@@ -212,7 +212,12 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
     // be paused.
     if (drawingBaseSurfaceReady) {
         if (!shouldDraw)
-            ;//~: returnFlags |= DrawGlInfo::kStatusDraw;
+#if ENABLE(OLD_SKIA)
+            returnFlags |= DrawGlInfo::kStatusDraw;
+#else
+            //~: TODO(alex)
+            ALOGW("SurfaceCollectionManager::singleSurfaceModeInvalidation NOTIMPLEMENTED");
+#endif
         else
             requireDirtyAll |= hasRunningAnimation;
     }
@@ -221,7 +226,12 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
 
     bool requireInvoke = requireDirtyAll || !drawingBaseSurfaceReady;
     if (requireInvoke)
-        ;//~: returnFlags |= DrawGlInfo::kStatusInvoke;
+#if ENABLE(OLD_SKIA)
+        returnFlags |= DrawGlInfo::kStatusInvoke;
+#else
+        //~: TODO(alex)
+        ALOGW("SurfaceCollectionManager::singleSurfaceModeInvalidation NOTIMPLEMENTED");
+#endif
 
     m_newPaintingCollection = false;
     m_previouslyScrolling = scrolling;
@@ -265,7 +275,12 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
             if (newCollectionHasAnimPtr)
                 *newCollectionHasAnimPtr = m_paintingCollection->hasCompositedAnimations();
             swap();
-            //~: returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
+#if ENABLE(OLD_SKIA)
+            returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
+#else
+            //~: TODO(alex)
+            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+#endif
         }
     } else if (m_drawingCollection) {
         ALOGV("preparing drawing collection %p", m_drawingCollection);
@@ -274,7 +289,12 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
     }
 
     if (m_paintingCollection)
-        ;//~: returnFlags |= DrawGlInfo::kStatusInvoke;
+#if ENABLE(OLD_SKIA)
+        returnFlags |= DrawGlInfo::kStatusInvoke;
+#else
+        //~: TODO(alex)
+        ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+#endif
 
     if (!shouldDraw) {
         if (didCollectionSwap
@@ -286,11 +306,21 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 
             if (didCollectionSwap && m_paintingCollection)
                 m_paintingCollection->prepareGL(visibleContentRect, tryFastBlit);
-            //~: returnFlags |= DrawGlInfo::kStatusDraw;
+#if ENABLE(OLD_SKIA)
+            returnFlags |= DrawGlInfo::kStatusDraw;
+#else
+            //~: TODO(alex)
+            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+#endif
         } else {
             // current collection not ready - invoke functor in process mode
             // until either drawing or painting collection is ready
-            //~: returnFlags |= DrawGlInfo::kStatusInvoke;
+#if ENABLE(OLD_SKIA)
+            returnFlags |= DrawGlInfo::kStatusInvoke;
+#else
+            //~: TODO(alex)
+            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+#endif
         }
 
         return returnFlags;
@@ -315,7 +345,12 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
             m_fastSwapMode = false;
         } else {
             // drawing isn't ready, must redraw
-            //~: returnFlags |= DrawGlInfo::kStatusInvoke;
+#if ENABLE(OLD_SKIA)
+            returnFlags |= DrawGlInfo::kStatusInvoke;
+#else
+            //~: TODO(alex)
+            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+#endif
         }
 
         hasRunningAnimation = m_drawingCollection->evaluateAnimations(currentTime);
@@ -346,7 +381,12 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #endif
 
     if (m_drawingCollection && m_drawingCollection->drawGL(visibleContentRect))
-        ;//~: returnFlags |= DrawGlInfo::kStatusDraw;
+#if ENABLE(OLD_SKIA)
+        returnFlags |= DrawGlInfo::kStatusDraw;
+#else
+        //~: TODO(alex)
+        ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+#endif
 
     ALOGV("returnFlags %d,  m_paintingCollection %d ", returnFlags, m_paintingCollection);
     return returnFlags;

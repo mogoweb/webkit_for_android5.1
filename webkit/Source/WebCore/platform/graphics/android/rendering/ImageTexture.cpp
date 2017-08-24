@@ -94,6 +94,7 @@ ImageTexture::ImageTexture(SkBitmap* bmp, unsigned crc)
     m_picture->endRecording();
 #else
     //~:TODO(alex)
+    ALOGW("ImageTexture::ImageTexture NOTIMPLEMENTED");
 #endif
 }
 
@@ -240,6 +241,7 @@ bool ImageTexture::paint(SkCanvas* canvas)
     canvas->drawPicture(*m_picture);
 #else
     //~:TODO(alex)
+    ALOGW("ImageTexture::paint NOTIMPLEMENTED");
 #endif
 
     return true;

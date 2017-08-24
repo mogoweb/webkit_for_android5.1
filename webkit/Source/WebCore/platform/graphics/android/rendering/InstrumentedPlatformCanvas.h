@@ -307,6 +307,7 @@ public:
         SkCanvas::drawPicture(picture);
 #else
         //~:TODO(alex)
+        ALOGW("drawPicture NOTIMPLEMENTED");
 #endif
     }
 

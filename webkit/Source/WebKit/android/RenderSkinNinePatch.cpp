@@ -83,6 +83,7 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     peeker.fPatch->serialize(*data);
 #else
     //~:TODO(alex)
+    ALOGW("RenderSkinNinePatch::decodeAsset");
 #endif
     return true;
 }
@@ -99,10 +100,15 @@ void RenderSkinNinePatch::DrawNinePatch(SkCanvas* canvas, const SkRect& bounds,
         SkPaint defaultPaint;
         // matches default dither in NinePatchDrawable.java.
         defaultPaint.setDither(true);
-        //~: SkNinePatch::DrawMesh(canvas, bounds, patch.m_bitmap,
-        //~:                       data->xDivs, data->numXDivs,
-        //~:                       data->yDivs, data->numYDivs,
-        //~:                       &defaultPaint);
+#if ENABLE(OLD_SKIA)
+        SkNinePatch::DrawMesh(canvas, bounds, patch.m_bitmap,
+                              data->xDivs, data->numXDivs,
+                              data->yDivs, data->numYDivs,
+                              &defaultPaint);
+#else
+        //~: TODO(alex)
+        ALOGW("RenderSkinNinePatch::DrawNinePatch");
+#endif
     } else {
         NinePatch_Draw(canvas, bounds, patch.m_bitmap, *data, 0, 0);
     }

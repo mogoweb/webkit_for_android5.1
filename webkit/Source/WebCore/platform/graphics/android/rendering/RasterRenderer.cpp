@@ -71,6 +71,7 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
         m_bitmap.setIsOpaque(false);
 #else
         //~:TODO(alex)
+        ALOGW("RasterRenderer::setupCanvas NOTIMPLEMENTED");
 #endif
 
         // clear bitmap if necessary
@@ -88,6 +89,7 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
         m_bitmap.setIsOpaque(!background->hasAlpha());
 #else
         //~:TODO(alex)
+        ALOGW("RasterRenderer::setupCanvas NOTIMPLEMENTED");
 #endif
 
         // fill background color if necessary
@@ -103,7 +105,8 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
 
     device->unref();
 #else
-        //~:TODO(alex)
+    //~:TODO(alex)
+    ALOGW("RasterRenderer::setupCanvas NOTIMPLEMENTED");
 #endif
 }
 

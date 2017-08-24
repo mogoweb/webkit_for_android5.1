@@ -37,6 +37,7 @@ protected:
         setBounder(0);
 #else
         //~:TODO(alex)
+        ALOGW("~ParseCanvas NOTIMPLEMENTED");
 #endif
     }
 

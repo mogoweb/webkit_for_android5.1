@@ -126,6 +126,7 @@ void RenderSkinMediaButton::Draw(SkCanvas* canvas, const IntRect& r,
     paint.setFlags(SkPaint::kFilterBitmap_Flag);
 #else
     //~:TOOD(alex)
+    ALOGW("RenderSkinMediaButton::Draw NOTIMPLEMENTED");
 #endif
 
     switch (buttonType) {

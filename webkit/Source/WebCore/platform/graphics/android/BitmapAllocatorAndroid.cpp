@@ -29,6 +29,8 @@
 #if ENABLE(OLD_SKIA)
 #include "SkImageRef_GlobalPool.h"
 #include "SkImageRef_ashmem.h"
+#else
+#include "AndroidLog.h"
 #endif
 
 // made this up, so we don't waste a file-descriptor on small images, plus
@@ -71,6 +73,7 @@ bool BitmapAllocatorAndroid::allocPixelRef(SkBitmap* bitmap, SkColorTable*)
     return true;
 #else
     //~:TODO(alex)
+    ALOGW("BitmapAllocatorAndroid::allocPixelRef NOTIMPLEMENTED");
     return false;
 #endif
 }

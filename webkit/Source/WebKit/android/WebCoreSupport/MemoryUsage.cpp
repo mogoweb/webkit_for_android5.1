@@ -26,6 +26,7 @@
 #include "config.h"
 #include "MemoryUsage.h"
 
+#include "AndroidLog.h"
 #include <v8.h>
 
 // Workaround an issue where malloc_footprint is in malloc.h
@@ -37,14 +38,17 @@ using namespace WTF;
 
 int MemoryUsage::memoryUsageMb(bool /* forceFresh */)
 {
-#if 0  //~:
+#if ENABLE(OLD_SKIA)
     size_t footprint = dlmalloc_footprint() >> 20;
     v8::HeapStatistics stat;
     v8::V8::GetHeapStatistics(&stat);
     unsigned v8Usage = stat.total_heap_size() >> 20;
     return footprint + v8Usage;
-#endif  //~:
+#else
+    //~: TODO(alex)
+    ALOGW("MemoryUsage::memoryUsageMb NOTIMPLEMENTED");
     return 0;
+#endif
 }
 
 int MemoryUsage::m_lowMemoryUsageMb = 0;

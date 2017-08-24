@@ -30,6 +30,7 @@
 #include "SkBitmapRef.h"
 #endif
 
+#include "AndroidLog.h"
 #include "NotImplemented.h"
 
 namespace WebCore {
@@ -85,6 +86,7 @@ bool ImageFrame::copyBitmapData(const ImageFrame& other)
     return otherBitmap.copyTo(&m_bitmap, otherBitmap.config());
 #else
     //~:TODO(alex)
+    ALOGW("ImageFrame::copyBitmapData NOTIMPLEMENTED");
     return true;
 #endif
 }
@@ -123,6 +125,7 @@ void ImageFrame::setHasAlpha(bool alpha)
     m_bitmap.setIsOpaque(!alpha);
 #else
     //~:TODO(alex)
+    ALOGW("ImageFrame::setHasAlpha NOTIMPLEMENTED");
 #endif
 }
 

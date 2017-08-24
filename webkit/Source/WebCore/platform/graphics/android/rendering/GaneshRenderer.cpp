@@ -85,6 +85,7 @@ void GaneshRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
     canvas->setDevice(device);
 #else
     //~:TODO(alex)
+    ALOGW("GaneshRenderer::setupCanvas NOTIMPLEMENTED");
 #endif
 }
 

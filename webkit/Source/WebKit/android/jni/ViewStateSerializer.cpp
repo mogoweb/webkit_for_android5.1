@@ -193,6 +193,7 @@ static BaseLayerAndroid* nativeDeserializeViewState(JNIEnv* env, jobject, jint v
         SkSafeUnref(picture);
 #else
         //~:TODO(alex)
+        ALOGW("nativeDeserializeViewState NOTIMPLEMENTED");
 #endif
     }
 
@@ -428,6 +429,7 @@ void serializeLayer(LayerAndroid* layer, SkWStream* stream)
         buffer.writeToStream(stream);
 #else
         //~:TODO(alex)
+        ALOGW("serializeLayer NOTIMPLEMENTED");
 #endif
     }
     bool hasRecordingPicture = layer->m_content != 0 && !layer->m_content->isEmpty();
@@ -545,6 +547,7 @@ LayerAndroid* deserializeLayer(int version, SkMemoryStream* stream)
         contentsImage.unflatten(buffer);
 #else
         //~:TODO(alex)
+        ALOGW("deserializeLayer NOTIMPLEMENTED");
 #endif
         SkBitmapRef* imageRef = new SkBitmapRef(contentsImage);
         layer->setContentsImage(imageRef);
@@ -562,6 +565,7 @@ LayerAndroid* deserializeLayer(int version, SkMemoryStream* stream)
             SkSafeUnref(picture);
 #else
             //~:TODO(alex)
+            ALOGW("deserializeLayer NOTIMPLEMENTED");
 #endif
         }
         layer->setContent(content);

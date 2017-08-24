@@ -100,7 +100,7 @@ void TransferQueue::cleanupGLResources()
 
 void TransferQueue::initGLResources(int width, int height)
 {
-#if 0  //~:
+#if ENABLE(OLD_SKIA)
     android::Mutex::Autolock lock(m_transferQueueItemLocks);
     if (!m_sharedSurfaceTextureId) {
         glGenTextures(1, &m_sharedSurfaceTextureId);
@@ -132,7 +132,10 @@ void TransferQueue::initGLResources(int width, int height)
 
     if (!m_fboID)
         glGenFramebuffers(1, &m_fboID);
-#endif  //~:
+#else
+    //~: TODO(alex)
+    ALOGW("TransferQueue::initGLResources NOTIMPLEMENTED");
+#endif
 }
 
 // When bliting, if the item from the transfer queue is mismatching b/t the

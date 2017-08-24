@@ -78,6 +78,7 @@ float PictureLayerContent::maxZoomScale()
     }
 #else
     //~:TODO(alex)
+    ALOGW("PictureLayerContent::maxZoomScale NOTIMPLEMENTED");
 #endif
 
     m_checkedContent = true;
@@ -98,6 +99,7 @@ void PictureLayerContent::draw(SkCanvas* canvas)
     canvas->drawPicture(*m_picture);
 #else
     //~:TODO(alex)
+    ALOGW("PictureLayerContent::draw NOTIMPLEMENTED");
 #endif
 }
 

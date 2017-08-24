@@ -65,6 +65,7 @@ GrContext* GaneshContext::getGrContext()
         m_grContext = GrContext::Create(kOpenGL_Shaders_GrEngine, 0);
 #else
     //~:TODO(alex)
+    ALOGW("GaneshContext::getGrContext NOTIMPLEMENTED");
 #endif
     return m_grContext;
 }
@@ -170,6 +171,7 @@ SkDevice* GaneshContext::getDeviceForTile(const TileRenderInfo& renderInfo)
         ALOGV("generated device %p", m_tileDeviceSurface);
 #else
         //~:TODO(alex)
+        ALOGW("GaneshContext::getDeviceForTile NOTIMPLEMENTED");
 #endif
     }
 
@@ -184,6 +186,7 @@ SkDevice* GaneshContext::getDeviceForTile(const TileRenderInfo& renderInfo)
     return m_tileDeviceSurface;
 #else
     //~:TODO(alex)
+    ALOGW("GaneshContext::getDeviceForTile NOTIMPLEMENTED");
     return NULL;
 #endif
 }

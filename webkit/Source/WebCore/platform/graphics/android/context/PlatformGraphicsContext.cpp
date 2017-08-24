@@ -173,6 +173,7 @@ bool PlatformGraphicsContext::State::setupShadowPaint(SkPaint* paint, SkPoint* o
                              SkBlurMaskFilter::kNormal_BlurStyle, flags))->unref();
 #else
         //~:TODO(alex)
+        ALOGW("PlatformGraphicsContext::State::setupShadowPaint NOTIMPLEMENTED");
 #endif
     }
     return SkColorGetA(shadow.color) && (shadow.blur || shadow.dx || shadow.dy);
@@ -312,6 +313,7 @@ void PlatformGraphicsContext::setLineDash(const DashArray& dashes, float dashOff
     *effectPtr = new SkDashPathEffect(intervals, count, SkFloatToScalar(dashOffset));
 #else
     //~:TODO(alex)
+    ALOGW("PlatformGraphicsContext::setLineDash NOTIMPLEMENTED");
 #endif
 
     delete[] intervals;
@@ -418,7 +420,8 @@ void PlatformGraphicsContext::setupPaintCommon(SkPaint* paint) const
                                                     flags);
         paint->setLooper(looper)->unref();
 #else
-        //~://TODO(alex)
+        //~:TODO(alex)
+        ALOGW("PlatformGraphicsContext::setupPaintCommon NOTIMPLEMENTED");
 #endif
     }
     paint->setFilterBitmap(true);

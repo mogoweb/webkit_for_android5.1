@@ -47,7 +47,7 @@ WTFLogChannel LogHistory =           { 0x00004000, "WebCoreLogLevel", WTFLogChan
 WTFLogChannel LogPageCache =         { 0x00008000, "WebCoreLogLevel", WTFLogChannelOff };
 
 WTFLogChannel LogPlatformLeaks =     { 0x00010000, "WebCoreLogLevel", WTFLogChannelOff };
-WTFLogChannel LogResourceLoading =   { 0x00020000, "WebCoreLogLevel", WTFLogChannelOff };
+WTFLogChannel LogResourceLoading =   { 0x00020000, "WebCoreLogLevel", WTFLogChannelOn };
 
 WTFLogChannel LogNetwork =           { 0x00100000, "WebCoreLogLevel", WTFLogChannelOff };
 WTFLogChannel LogFTP =               { 0x00200000, "WebCoreLogLevel", WTFLogChannelOff };

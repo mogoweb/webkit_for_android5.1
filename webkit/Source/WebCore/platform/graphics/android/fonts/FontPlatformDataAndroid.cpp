@@ -30,6 +30,7 @@
 #include "config.h"
 #include "FontPlatformData.h"
 
+#include "AndroidLog.h"
 #ifdef SUPPORT_COMPLEX_SCRIPTS
 #include "HarfbuzzSkia.h"
 #endif
@@ -169,6 +170,7 @@ int FontPlatformData::emSizeInFontUnits() const
         metrics = m_typeface->getAdvancedTypefaceMetrics(SkAdvancedTypefaceMetrics::kNo_PerGlyphInfo);
 #else
     //~:TODO(alex)
+    ALOGW("FontPlatformData::emSizeInFontUnits NOTIMPLEMENTED");
 #endif
     if (metrics) {
         m_emSizeInFontUnits = metrics->fEmSize;
@@ -220,7 +222,9 @@ void FontPlatformData::setupPaint(SkPaint* paint) const
 #if ENABLE(OLD_SKIA)
     paint->setLanguage(s_defaultLanguage);
 #else
-    //~:TODO(alex)
+    SkPaintOptionsAndroid options = paint->getPaintOptionsAndroid();
+    options.setLanguage(s_defaultLanguage);
+    paint->setPaintOptionsAndroid(options);
 #endif
 #ifndef SUPPORT_COMPLEX_SCRIPTS
     paint->setTextEncoding(SkPaint::kUTF16_TextEncoding);
