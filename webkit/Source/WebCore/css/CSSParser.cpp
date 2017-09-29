@@ -5922,7 +5922,7 @@ int CSSParser::lex(void* yylvalWithoutType)
     YYSTYPE* yylval = static_cast<YYSTYPE*>(yylvalWithoutType);
     int length;
 
-    //~: lex();
+    lex();
 
     UChar* t = text(&length);
 

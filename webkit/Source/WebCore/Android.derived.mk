@@ -51,7 +51,7 @@ $(GEN): $(intermediates)/%.h : $(LOCAL_PATH)/%.in $(LOCAL_PATH)/css/SVGCSSValueK
 	@echo "Generating CSSValueKeywords.h <= CSSValueKeywords.in"
 	@mkdir -p $(dir $@)
 	@cp -f $(SCRIPT) $(dir $@)
-ifeq ($(ENABLE_SVG),true)    
+ifeq ($(ENABLE_SVG),true)
 	@perl -ne 'print lc' $^ > $(@:%.h=%.in)
 else
 	@perl -ne 'print lc' $< > $(@:%.h=%.in)
@@ -115,6 +115,7 @@ LOCAL_GENERATED_SOURCES += $(GEN)
 
 
 # CSS tokenizer
+OLD_FLEX := $(BASE_PATH)/Tools/android/prebuilts/misc/$(HOST_PREBUILT_TAG)/flex/flex-2.5.4a$(HOST_EXECUTABLE_SUFFIX)
 
 GEN := $(intermediates)/css/tokenizer.cpp
 $(GEN): PRIVATE_CUSTOM_TOOL = $(OLD_FLEX) -t $< | perl $(dir $<)/maketokenizer > $@
@@ -172,7 +173,7 @@ $(intermediates)/css/UserAgentStyleSheets.cpp : $(GEN)
 
 GEN:= $(intermediates)/XMLNSNames.cpp
 $(GEN): PRIVATE_PATH := $(LOCAL_PATH)
-$(GEN): PRIVATE_CUSTOM_TOOL = perl -I $(PRIVATE_PATH)/bindings/scripts $< --attrs $(xmlns_attrs) --output $(dir $@) 
+$(GEN): PRIVATE_CUSTOM_TOOL = perl -I $(PRIVATE_PATH)/bindings/scripts $< --attrs $(xmlns_attrs) --output $(dir $@)
 $(GEN): xmlns_attrs := $(LOCAL_PATH)/xml/xmlnsattrs.in
 $(GEN): $(LOCAL_PATH)/dom/make_names.pl $(xmlns_attrs)
 	$(transform-generated-source)
@@ -180,7 +181,7 @@ LOCAL_GENERATED_SOURCES += $(GEN)
 
 GEN:= $(intermediates)/XMLNames.cpp
 $(GEN): PRIVATE_PATH := $(LOCAL_PATH)
-$(GEN): PRIVATE_CUSTOM_TOOL = perl -I $(PRIVATE_PATH)/bindings/scripts $< --attrs $(xml_attrs) --output $(dir $@) 
+$(GEN): PRIVATE_CUSTOM_TOOL = perl -I $(PRIVATE_PATH)/bindings/scripts $< --attrs $(xml_attrs) --output $(dir $@)
 $(GEN): xml_attrs := $(LOCAL_PATH)/xml/xmlattrs.in
 $(GEN): $(LOCAL_PATH)/dom/make_names.pl $(xml_attrs)
 	$(transform-generated-source)
@@ -190,7 +191,7 @@ LOCAL_GENERATED_SOURCES += $(GEN)
 
 GEN:= $(intermediates)/XLinkNames.cpp
 $(GEN): PRIVATE_PATH := $(LOCAL_PATH)
-$(GEN): PRIVATE_CUSTOM_TOOL = perl -I $(PRIVATE_PATH)/bindings/scripts $< --attrs $(xlink_attrs) --output $(dir $@) 
+$(GEN): PRIVATE_CUSTOM_TOOL = perl -I $(PRIVATE_PATH)/bindings/scripts $< --attrs $(xlink_attrs) --output $(dir $@)
 $(GEN): xlink_attrs := $(LOCAL_PATH)/svg/xlinkattrs.in
 $(GEN): $(LOCAL_PATH)/dom/make_names.pl $(xlink_attrs)
 	$(transform-generated-source)
