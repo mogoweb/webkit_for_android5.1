@@ -12,7 +12,7 @@ index b37cf5c..7dc5ca1 100644
  typedef float   SkScalar;
  
 diff --git a/include/core/SkUserConfig.h b/include/core/SkUserConfig.h
-index 06b3b43..19c8bf7 100644
+index 06b3b43..1ffa6c4 100644
 --- a/include/core/SkUserConfig.h
 +++ b/include/core/SkUserConfig.h
 @@ -207,7 +207,7 @@
@@ -24,11 +24,12 @@ index 06b3b43..19c8bf7 100644
  #define SK_ALLOW_STATIC_GLOBAL_INITIALIZERS 0
  #define SK_SUPPORT_GPU 1
  #define SK_SUPPORT_OPENCL 0
-@@ -240,5 +240,7 @@
+@@ -240,5 +240,8 @@
  #define GR_COMPRESS_ALPHA_MASK 0
  #define SK_SUPPORT_PDF
  #define SK_SUPPORT_LEGACY_SHADER_LOCALMATRIX
 +#define SK_SUPPORT_LEGACY_SETCONFIG
 +#define SK_SUPPORT_LEGACY_GETTOTALCLIP
++#define SK_SUPPORT_LEGACY_DRAWTEXT_VIRTUAL
  
  #endif // SkUserConfig_Android_DEFINED
