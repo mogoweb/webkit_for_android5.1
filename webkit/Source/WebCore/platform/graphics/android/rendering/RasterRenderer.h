@@ -46,7 +46,11 @@ public:
     ~RasterRenderer();
 
 protected:
+#if ENABLE(OLD_SKIA)
     virtual void setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* canvas);
+#else
+    virtual void setupCanvas(const TileRenderInfo& renderInfo, InstrumentedPlatformCanvas** canvas);
+#endif
     virtual void renderingComplete(const TileRenderInfo& renderInfo, SkCanvas* canvas);
     virtual void deviceCheckForPureColor(TileRenderInfo& renderInfo, SkCanvas* canvas);
 

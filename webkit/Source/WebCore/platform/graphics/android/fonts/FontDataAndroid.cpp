@@ -49,7 +49,7 @@ void SimpleFontData::platformInit()
 {
     SkPaint  paint;
     SkPaint::FontMetrics skiaFontMetrics;
-    
+
     m_platformData.setupPaint(&paint);
     paint.getFontMetrics(&skiaFontMetrics);
 
@@ -78,7 +78,7 @@ void SimpleFontData::platformInit()
             m_hasVerticalGlyphs = true;
 #else
         //~:TODO(alex)
-        ALOGW("SimpleFontData::platformInit");
+        ALOGW("SimpleFontData::platformInit NOTIMPLEMENTED");
 #endif
     }
 }

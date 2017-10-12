@@ -31,8 +31,8 @@ namespace WebCore {
 
 WTFLogChannel LogNotYetImplemented = { 0x00000001, "WebCoreLogLevel", WTFLogChannelOff };
 
-WTFLogChannel LogFrames =            { 0x00000010, "WebCoreLogLevel", WTFLogChannelOff };
-WTFLogChannel LogLoading =           { 0x00000020, "WebCoreLogLevel", WTFLogChannelOff };
+WTFLogChannel LogFrames =            { 0x00000010, "WebCoreLogLevel", WTFLogChannelOn };
+WTFLogChannel LogLoading =           { 0x00000020, "WebCoreLogLevel", WTFLogChannelOn };
 WTFLogChannel LogPopupBlocking =     { 0x00000040, "WebCoreLogLevel", WTFLogChannelOff };
 WTFLogChannel LogEvents =            { 0x00000080, "WebCoreLogLevel", WTFLogChannelOff };
 

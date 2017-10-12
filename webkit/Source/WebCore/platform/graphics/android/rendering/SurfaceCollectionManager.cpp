@@ -215,8 +215,10 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
 #if ENABLE(OLD_SKIA)
             returnFlags |= DrawGlInfo::kStatusDraw;
 #else
-            //~: TODO(alex)
-            ALOGW("SurfaceCollectionManager::singleSurfaceModeInvalidation NOTIMPLEMENTED");
+        {
+            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
+            returnFlags |= DrawGlInfo::kStatusDrew;
+        }
 #endif
         else
             requireDirtyAll |= hasRunningAnimation;
@@ -229,8 +231,7 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
 #if ENABLE(OLD_SKIA)
         returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-        //~: TODO(alex)
-        ALOGW("SurfaceCollectionManager::singleSurfaceModeInvalidation NOTIMPLEMENTED");
+        ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
 #endif
 
     m_newPaintingCollection = false;
@@ -278,8 +279,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if ENABLE(OLD_SKIA)
             returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
 #else
-            //~: TODO(alex)
-            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
+            returnFlags |= DrawGlInfo::kStatusDrew;
 #endif
         }
     } else if (m_drawingCollection) {
@@ -292,8 +293,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if ENABLE(OLD_SKIA)
         returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-        //~: TODO(alex)
-        ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+        ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
 #endif
 
     if (!shouldDraw) {
@@ -309,8 +309,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if ENABLE(OLD_SKIA)
             returnFlags |= DrawGlInfo::kStatusDraw;
 #else
-            //~: TODO(alex)
-            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
+            returnFlags |= DrawGlInfo::kStatusDrew;
 #endif
         } else {
             // current collection not ready - invoke functor in process mode
@@ -318,8 +318,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if ENABLE(OLD_SKIA)
             returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-            //~: TODO(alex)
-            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
 #endif
         }
 
@@ -348,8 +347,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if ENABLE(OLD_SKIA)
             returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-            //~: TODO(alex)
-            ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
 #endif
         }
 
@@ -384,8 +382,10 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if ENABLE(OLD_SKIA)
         returnFlags |= DrawGlInfo::kStatusDraw;
 #else
-        //~: TODO(alex)
-        ALOGW("SurfaceCollectionManager::drawGL NOTIMPLEMENTED");
+    {
+        ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
+        returnFlags |= DrawGlInfo::kStatusDrew;
+    }
 #endif
 
     ALOGV("returnFlags %d,  m_paintingCollection %d ", returnFlags, m_paintingCollection);

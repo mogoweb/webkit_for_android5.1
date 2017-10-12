@@ -35,6 +35,9 @@
 #include "LayerAndroid.h"
 #include "SkDevice.h"
 #include "SkPicture.h"
+#if !ENABLE(OLD_SKIA)
+#include "SkPictureRecorder.h"
+#endif
 #include "TileGrid.h"
 #include "TilesManager.h"
 
@@ -93,8 +96,12 @@ ImageTexture::ImageTexture(SkBitmap* bmp, unsigned crc)
     pcanvas->drawBitmap(*m_image, 0, 0);
     m_picture->endRecording();
 #else
-    //~:TODO(alex)
-    ALOGW("ImageTexture::ImageTexture NOTIMPLEMENTED");
+    ALOGW("ImageTexture::ImageTexture use system skia");
+    SkPictureRecorder recorder;
+    SkCanvas* pcanvas = recorder.beginRecording(m_image->width(), m_image->height());
+    pcanvas->clear(SkColorSetARGBInline(0, 0, 0, 0));
+    pcanvas->drawBitmap(*m_image, 0, 0);
+    m_picture = recorder.endRecording();
 #endif
 }
 
@@ -123,6 +130,8 @@ SkBitmap* ImageTexture::convertBitmap(SkBitmap* bitmap)
     dest.set(0, 0, w, h);
 #if ENABLE(OLD_SKIA)
     img->setIsOpaque(false);
+else
+    img->setAlphaType(kPremul_SkAlphaType);
 #endif
     img->eraseARGB(0, 0, 0, 0);
     canvas.drawBitmapRect(*bitmap, 0, dest);
@@ -240,8 +249,8 @@ bool ImageTexture::paint(SkCanvas* canvas)
 #if ENABLE(OLD_SKIA)
     canvas->drawPicture(*m_picture);
 #else
-    //~:TODO(alex)
-    ALOGW("ImageTexture::paint NOTIMPLEMENTED");
+    ALOGW("ImageTexture::paint use system skia");
+    canvas->drawPicture(m_picture);
 #endif
 
     return true;

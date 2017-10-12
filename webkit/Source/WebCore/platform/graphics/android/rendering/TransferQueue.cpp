@@ -133,8 +133,31 @@ void TransferQueue::initGLResources(int width, int height)
     if (!m_fboID)
         glGenFramebuffers(1, &m_fboID);
 #else
-    //~: TODO(alex)
-    ALOGW("TransferQueue::initGLResources NOTIMPLEMENTED");
+    ALOGW("TransferQueue::initGLResources use system skia");
+    android::Mutex::Autolock lock(m_transferQueueItemLocks);
+    if (!m_sharedSurfaceTextureId) {
+        glGenTextures(1, &m_sharedSurfaceTextureId);
+        sp<IGraphicBufferProducer> producer;
+        sp<IGraphicBufferConsumer> consumer;
+        BufferQueue::createBufferQueue(&producer, &consumer);
+        m_sharedSurfaceTexture =
+                new android::GLConsumer(consumer, m_sharedSurfaceTextureId, GL_TEXTURE_2D, true, true);
+        m_ANW = new android::Surface(producer);
+
+        int extraBuffersNeeded = 0;
+        m_ANW->query(m_ANW.get(), NATIVE_WINDOW_MIN_UNDEQUEUED_BUFFERS,
+                     &extraBuffersNeeded);
+
+        int result = native_window_set_buffers_geometry(m_ANW.get(),
+                width, height, HAL_PIXEL_FORMAT_RGBA_8888);
+        GLUtils::checkSurfaceTextureError("native_window_set_buffers_geometry", result);
+        result = native_window_set_usage(m_ANW.get(),
+                GRALLOC_USAGE_SW_READ_OFTEN | GRALLOC_USAGE_SW_WRITE_OFTEN);
+        GLUtils::checkSurfaceTextureError("native_window_set_usage", result);
+    }
+
+    if (!m_fboID)
+        glGenFramebuffers(1, &m_fboID);
 #endif
 }
 
@@ -418,14 +441,14 @@ bool TransferQueue::tryUpdateQueueWithBitmap(const TileRenderInfo* renderInfo,
     bool ready = readyForUpdate();
     TextureUploadType currentUploadType = m_currentUploadType;
     if (!ready) {
-        ALOGV("Quit bitmap update: not ready! for tile x y %d %d",
+        ALOGI("Quit bitmap update: not ready! for tile x y %d %d",
               renderInfo->x, renderInfo->y);
         return false;
     }
     if (currentUploadType == GpuUpload) {
         // a) Dequeue the Surface Texture and write into the buffer
         if (!m_ANW.get()) {
-            ALOGV("ERROR: ANW is null");
+            ALOGE("ERROR: ANW is null");
             return false;
         }
 
@@ -436,7 +459,7 @@ bool TransferQueue::tryUpdateQueueWithBitmap(const TileRenderInfo* renderInfo,
     // b) After update the Surface Texture, now udpate the transfer queue info.
     addItemInTransferQueue(renderInfo, currentUploadType, bitmap);
 
-    ALOGV("Bitmap updated x, y %d %d, baseTile %p",
+    ALOGI("Bitmap updated x, y %d %d, baseTile %p",
           renderInfo->x, renderInfo->y, renderInfo->baseTile);
     return true;
 }

@@ -85,8 +85,11 @@ public:
     static void setCurrentRendererType(RendererType type) { g_currentType = type; }
 
 protected:
-
+#if ENABLE(OLD_SKIA)
     virtual void setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* canvas) = 0;
+#else
+    virtual void setupCanvas(const TileRenderInfo& renderInfo, InstrumentedPlatformCanvas** canvas) = 0;
+#endif
     virtual void renderingComplete(const TileRenderInfo& renderInfo, SkCanvas* canvas) = 0;
     void checkForPureColor(TileRenderInfo& renderInfo, InstrumentedPlatformCanvas& canvas);
 

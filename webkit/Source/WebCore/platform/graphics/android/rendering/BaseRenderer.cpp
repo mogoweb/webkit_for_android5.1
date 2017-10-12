@@ -93,32 +93,56 @@ void BaseRenderer::renderTiledContent(TileRenderInfo& renderInfo)
     const SkSize& tileSize = renderInfo.tileSize;
 
     Color *background = renderInfo.tilePainter->background();
+#if ENABLE(OLD_SKIA)
     InstrumentedPlatformCanvas canvas(TilesManager::instance()->tileWidth(),
-                                      TilesManager::instance()->tileHeight(),
-                                      background ? *background : Color::transparent);
-    setupCanvas(renderInfo, &canvas);
+                                  TilesManager::instance()->tileHeight(),
+                                  background ? *background : Color::transparent);
+#else
+    InstrumentedPlatformCanvas* canvas = 0;
+#endif
 
+    setupCanvas(renderInfo, &canvas);
+#if ENABLE(OLD_SKIA)
     if (!canvas.getDevice()) {
+#else
+    if (!canvas->getDevice()) {
+#endif
         // TODO: consider ALOGE
-        ALOGV("Error: No Device");
+        ALOGE("Error: No Device");
         return;
     }
 
     double before;
     if (visualIndicator) {
+#if ENABLE(OLD_SKIA)
         canvas.save();
+#else
+        canvas->save();
+#endif
         before = currentTimeMS();
     }
 
+#if ENABLE(OLD_SKIA)
     canvas.translate(-renderInfo.x * tileSize.width(), -renderInfo.y * tileSize.height());
     canvas.scale(renderInfo.scale, renderInfo.scale);
     renderInfo.tilePainter->paint(&canvas);
 
     checkForPureColor(renderInfo, canvas);
+#else
+    canvas->translate(-renderInfo.x * tileSize.width(), -renderInfo.y * tileSize.height());
+    canvas->scale(renderInfo.scale, renderInfo.scale);
+    renderInfo.tilePainter->paint(canvas);
+
+    checkForPureColor(renderInfo, *canvas);
+#endif
 
     if (visualIndicator) {
         double after = currentTimeMS();
+#if ENABLE(OLD_SKIA)
         canvas.restore();
+#else
+        canvas->restore();
+#endif
         unsigned int updateCount = renderInfo.tilePainter->getUpdateCount() & UPDATE_COUNT_MASK;
         const int color = updateCount & UPDATE_COUNT_ALPHA_MASK;
 
@@ -127,20 +151,43 @@ void BaseRenderer::renderTiledContent(TileRenderInfo& renderInfo)
         paint.setARGB(color, 0, 255, 0);
         SkIRect rect;
         rect.set(0, 0, tileSize.width(), tileSize.height());
+#if ENABLE(OLD_SKIA)
         canvas.drawIRect(rect, paint);
 
         drawTileInfo(&canvas, renderInfo, updateCount, after - before);
+#else
+        canvas->drawIRect(rect, paint);
+
+        drawTileInfo(canvas, renderInfo, updateCount, after - before);
+#endif
 
         // paint the tile boundaries
         paint.setARGB(64, 255, 0, 0);
         paint.setStrokeWidth(3);
+#if ENABLE(OLD_SKIA)
         canvas.drawLine(0, 0, tileSize.width(), tileSize.height(), paint);
+#else
+        canvas->drawLine(0, 0, tileSize.width(), tileSize.height(), paint);
+#endif
         paint.setARGB(64, 0, 255, 0);
+#if ENABLE(OLD_SKIA)
         canvas.drawLine(0, tileSize.height(), tileSize.width(), 0, paint);
+#else
+        canvas->drawLine(0, tileSize.height(), tileSize.width(), 0, paint);
+#endif
         paint.setARGB(128, 0, 0, 255);
+#if ENABLE(OLD_SKIA)
         canvas.drawLine(tileSize.width(), 0, tileSize.width(), tileSize.height(), paint);
+#else
+        canvas->drawLine(tileSize.width(), 0, tileSize.width(), tileSize.height(), paint);
+#endif
     }
+#if ENABLE(OLD_SKIA)
     renderingComplete(renderInfo, &canvas);
+#else
+    renderingComplete(renderInfo, canvas);
+    canvas->unref();
+#endif
 }
 
 void BaseRenderer::checkForPureColor(TileRenderInfo& renderInfo, InstrumentedPlatformCanvas& canvas)

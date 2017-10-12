@@ -33,6 +33,9 @@
 
 #include "AndroidLog.h"
 #include "GLUtils.h"
+#if !ENABLE(OLD_SKIA)
+#include "InstrumentedPlatformCanvas.h"
+#endif
 #include "SkBitmap.h"
 #include "SkBitmapRef.h"
 #include "SkCanvas.h"
@@ -62,7 +65,11 @@ RasterRenderer::~RasterRenderer()
 #endif
 }
 
+#if ENABLE(OLD_SKIA)
 void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* canvas)
+#else
+void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, InstrumentedPlatformCanvas** canvas)
+#endif
 {
     TRACE_METHOD();
 
@@ -70,8 +77,8 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
 #if ENABLE(OLD_SKIA)
         m_bitmap.setIsOpaque(false);
 #else
-        //~:TODO(alex)
-        ALOGW("RasterRenderer::setupCanvas NOTIMPLEMENTED");
+        ALOGI("%s %d m_bitmap.setAlphaType(kPremul_SkAlphaType)", __FILE__, __LINE__);
+        m_bitmap.setAlphaType(kPremul_SkAlphaType);
 #endif
 
         // clear bitmap if necessary
@@ -88,8 +95,11 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
 #if ENABLE(OLD_SKIA)
         m_bitmap.setIsOpaque(!background->hasAlpha());
 #else
-        //~:TODO(alex)
-        ALOGW("RasterRenderer::setupCanvas NOTIMPLEMENTED");
+        if (background->hasAlpha())
+            ALOGI("%s %d m_bitmap.setAlphaType(kPremul_SkAlphaType)", __FILE__, __LINE__);
+        else
+            ALOGI("%s %d m_bitmap.setAlphaType(kOpaque_SkAlphaType)", __FILE__, __LINE__);
+        m_bitmap.setAlphaType(background->hasAlpha()? kPremul_SkAlphaType : kOpaque_SkAlphaType);
 #endif
 
         // fill background color if necessary
@@ -105,8 +115,14 @@ void RasterRenderer::setupCanvas(const TileRenderInfo& renderInfo, SkCanvas* can
 
     device->unref();
 #else
-    //~:TODO(alex)
-    ALOGW("RasterRenderer::setupCanvas NOTIMPLEMENTED");
+    ALOGW("RasterRenderer::setupCanvas use system skia");
+    Color *background = renderInfo.tilePainter->background();
+    InstrumentedPlatformCanvas* pcanvas = new InstrumentedPlatformCanvas(
+            TilesManager::instance()->tileWidth(),
+            TilesManager::instance()->tileHeight(),
+            background ? *background : Color::transparent,
+            m_bitmap);
+    *canvas = pcanvas;
 #endif
 }
 

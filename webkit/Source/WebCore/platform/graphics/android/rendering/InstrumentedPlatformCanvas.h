@@ -21,11 +21,11 @@
 
 #include "SkCanvas.h"
 
-#define DEBUG_SKIA_DRAWING 0
+#define DEBUG_SKIA_DRAWING 1
 #if DEBUG_SKIA_DRAWING
 #include "AndroidLog.h" // NOTE: AndroidLog.h normally shouldn't be included in a header
 #include "FloatRect.h"
-#define WRAPCANVAS_LOG_ENTRY(...) {ALOGD("non-rect %s, m_isSolidColor %d", __FUNCTION__, m_isSolidColor);}
+#define WRAPCANVAS_LOG_ENTRY(...) {ALOGI("non-rect %s, m_isSolidColor %d", __FUNCTION__, m_isSolidColor);}
 #else
 #define WRAPCANVAS_LOG_ENTRY(...) ((void)0)
 #endif
@@ -40,6 +40,17 @@ public:
         , m_solidColor(initialColor)
     {
     }
+
+#if !ENABLE(OLD_SKIA)
+    InstrumentedPlatformCanvas(int width, int height, Color initialColor, SkBitmap& bitmap)
+        : m_size(width, height)
+        , m_isSolidColor(true)
+        , m_solidColor(initialColor)
+        , SkCanvas(bitmap)
+    {
+        ALOGI("InstrumentedPlatformCanvas(%d, %d, (%d,%d,%d))", width, height, initialColor.red(), initialColor.green(), initialColor.blue());
+    }
+#endif
 
     virtual ~InstrumentedPlatformCanvas() { }
 
@@ -306,8 +317,7 @@ public:
 #if ENABLE(OLD_SKIA)
         SkCanvas::drawPicture(picture);
 #else
-        //~:TODO(alex)
-        ALOGW("drawPicture NOTIMPLEMENTED");
+        SkCanvas::drawPicture(&picture);
 #endif
     }
 

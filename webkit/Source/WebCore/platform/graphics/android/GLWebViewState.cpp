@@ -356,7 +356,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 #else
     {
         //~: no kStatusDraw defined in Android5.1, use kStatusDrew?
-        ALOGW("WARNING use DrawGlInfo::kStatusDrew instead of DrawGlInfo::kStatusDraw");
+        ALOGW("use DrawGlInfo::kStatusDrew instead of DrawGlInfo::kStatusDraw");
         returnFlags |= DrawGlInfo::kStatusDrew;
     }
 #endif
@@ -393,7 +393,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 #if ENABLE(OLD_SKIA)
         returnFlags |= DrawGlInfo::kStatusDraw | DrawGlInfo::kStatusInvoke;
 #else
-        ALOGW("GLWebViewState::drawGL NOTIMPLEMENTED");
+        ALOGW("no DrawGlInfo::kStatusDraw and DrawGlInfo::kStatusInvoke defined");
 #endif
     }
 
@@ -402,7 +402,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 #if ENABLE(OLD_SKIA)
     if (returnFlags & DrawGlInfo::kStatusDraw) {
 #else
-    if (true) {
+    if (returnFlags & DrawGlInfo::kStatusDrew) {
 #endif
         // returnFlags & kStatusDraw && empty inval region means we've inval'd everything,
         // but don't have new content. Keep redrawing full view (0,0,0,0)
