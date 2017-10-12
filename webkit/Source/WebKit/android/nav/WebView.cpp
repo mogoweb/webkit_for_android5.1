@@ -812,6 +812,10 @@ class GLDrawFunctor : Functor {
         bool shouldDraw = (messageId == uirenderer::DrawGlInfo::kModeDraw);
         if (shouldDraw)
             wvInstance->updateRectsForGL();
+        else {
+            ALOGI("GLDrawFunctor mode: %d. do nothing", messageId);
+            return uirenderer::DrawGlInfo::kStatusDone;
+        }
 
         if (invScreenRect.isEmpty()) {
             // NOOP operation if viewport is empty
@@ -855,7 +859,7 @@ class GLDrawFunctor : Functor {
         }
         // return 1 if invalidation needed, 2 to request non-drawing functor callback, 0 otherwise
         ALOGV("returnFlags are %d, shouldDraw %d", returnFlags, shouldDraw);
-        return returnFlags;
+        return uirenderer::DrawGlInfo::kStatusDone;
     }
     void updateScreenRect(WebCore::IntRect& _screenRect) {
         screenRect = _screenRect;
