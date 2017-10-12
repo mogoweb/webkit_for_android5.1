@@ -4330,7 +4330,7 @@ public final class WebViewClassic implements WebViewProvider, WebViewProvider.Sc
 
             int functor = nativeCreateDrawGLFunction(mNativeClass, invScreenRect,
                     screenRect, mVisibleContentRect, getScale(), extras);
-            //~: ((HardwareCanvas) canvas).callDrawGLFunction(functor);
+            ((HardwareCanvas) canvas).callDrawGLFunction2(functor);
             if (mHardwareAccelSkia != getSettings().getHardwareAccelSkiaEnabled()) {
                 mHardwareAccelSkia = getSettings().getHardwareAccelSkiaEnabled();
                 nativeUseHardwareAccelSkia(mHardwareAccelSkia);
