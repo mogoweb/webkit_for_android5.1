@@ -66,7 +66,7 @@ bool RenderSkinNinePatch::decodeAsset(AssetManager* am, const char* filename, Ni
     SkAutoTDelete<SkImageDecoder> add(decoder);
 
     decoder->setPeeker(&peeker);
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     if (!decoder->decode(&stream, &ninepatch->m_bitmap, prefConfig, mode, true)) {
         asset->close();
         ALOGE("RenderSkinNinePatch::Failed to decode nine patch asset");
@@ -100,7 +100,7 @@ void RenderSkinNinePatch::DrawNinePatch(SkCanvas* canvas, const SkRect& bounds,
         SkPaint defaultPaint;
         // matches default dither in NinePatchDrawable.java.
         defaultPaint.setDither(true);
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
         SkNinePatch::DrawMesh(canvas, bounds, patch.m_bitmap,
                               data->xDivs, data->numXDivs,
                               data->yDivs, data->numYDivs,

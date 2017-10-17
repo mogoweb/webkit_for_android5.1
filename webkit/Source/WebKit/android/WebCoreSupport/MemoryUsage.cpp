@@ -38,7 +38,7 @@ using namespace WTF;
 
 int MemoryUsage::memoryUsageMb(bool /* forceFresh */)
 {
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     size_t footprint = dlmalloc_footprint() >> 20;
     v8::HeapStatistics stat;
     v8::V8::GetHeapStatistics(&stat);

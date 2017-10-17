@@ -107,7 +107,7 @@ android::Surface* CanvasTexture::nativeWindow()
         return 0;
     if (!useSurfaceTexture())
         return 0;
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     m_surfaceTexture = new android::GLConsumer(m_texture, false);
     m_ANW = new android::Surface(m_surfaceTexture->getBufferQueue());
 #else

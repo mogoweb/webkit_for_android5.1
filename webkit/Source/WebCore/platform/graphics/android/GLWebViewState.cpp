@@ -351,7 +351,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
     // TODO: upload as many textures as possible within a certain time limit
     int returnFlags = 0;
     if (ImagesManager::instance()->prepareTextures(this))
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusDraw;
 #else
     {
@@ -390,7 +390,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 
     if (setLayersRenderingMode(nbTexturesNeeded)) {
         TilesManager::instance()->dirtyAllTiles();
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusDraw | DrawGlInfo::kStatusInvoke;
 #else
         ALOGW("no DrawGlInfo::kStatusDraw and DrawGlInfo::kStatusInvoke defined");
@@ -399,7 +399,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     if (returnFlags & DrawGlInfo::kStatusDraw) {
 #else
     if (returnFlags & DrawGlInfo::kStatusDrew) {

@@ -33,8 +33,11 @@
 #include "FontOrientation.h"
 #include "TextOrientation.h"
 #include <wtf/text/StringImpl.h>
-//~:#include "SkLanguage.h"
+#if ENABLE(OLD_SKIA)
+#include "SkLanguage.h"
+#else
 #include "SkPaintOptionsAndroid.h"
+#endif
 #include "SkPaint.h"
 
 #ifndef NDEBUG

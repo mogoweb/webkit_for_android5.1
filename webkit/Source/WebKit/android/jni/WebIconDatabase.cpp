@@ -29,7 +29,11 @@
 #include "WebIconDatabase.h"
 
 #include "FileSystem.h"
+#if ENABLE(OLD_SKIA)
+#include "OldGraphicsJNI.h"
+#else
 #include "GraphicsJNI.h"
+#endif
 #include "IconDatabase.h"
 #include "Image.h"
 #include "IntRect.h"

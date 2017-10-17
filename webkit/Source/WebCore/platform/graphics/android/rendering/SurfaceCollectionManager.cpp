@@ -212,7 +212,7 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
     // be paused.
     if (drawingBaseSurfaceReady) {
         if (!shouldDraw)
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusDraw;
 #else
         {
@@ -228,7 +228,7 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
 
     bool requireInvoke = requireDirtyAll || !drawingBaseSurfaceReady;
     if (requireInvoke)
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
         ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
@@ -276,7 +276,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
             if (newCollectionHasAnimPtr)
                 *newCollectionHasAnimPtr = m_paintingCollection->hasCompositedAnimations();
             swap();
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
             returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
 #else
             ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
@@ -290,7 +290,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
     }
 
     if (m_paintingCollection)
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
         ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
@@ -306,7 +306,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 
             if (didCollectionSwap && m_paintingCollection)
                 m_paintingCollection->prepareGL(visibleContentRect, tryFastBlit);
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusDraw;
 #else
             ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
@@ -315,7 +315,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
         } else {
             // current collection not ready - invoke functor in process mode
             // until either drawing or painting collection is ready
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
             ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
@@ -344,7 +344,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
             m_fastSwapMode = false;
         } else {
             // drawing isn't ready, must redraw
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
             ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
@@ -379,7 +379,7 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #endif
 
     if (m_drawingCollection && m_drawingCollection->drawGL(visibleContentRect))
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusDraw;
 #else
     {

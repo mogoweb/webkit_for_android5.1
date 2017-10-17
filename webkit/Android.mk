@@ -90,6 +90,12 @@ LOCAL_C_INCLUDES := \
 	external/libxml2/include \
 	external/libxslt \
 	external/hyphenation \
+	external/sqlite/dist \
+	frameworks/base/core/jni/android/graphics \
+	frameworks/base/include
+
+ifneq ($(ENABLE_OLD_SKIA),true)
+LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
 	external/skia/emoji \
 	external/skia/gpu/include \
 	external/skia/include/core \
@@ -100,10 +106,21 @@ LOCAL_C_INCLUDES := \
 	external/skia/include/utils \
 	external/skia/src/core \
 	external/skia/src/images \
-	external/skia/src/ports \
-	external/sqlite/dist \
-	frameworks/base/core/jni/android/graphics \
-	frameworks/base/include
+	external/skia/src/ports
+else
+LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
+	external/skia_old/emoji \
+	external/skia_old/gpu/include \
+	external/skia_old/include/core \
+	external/skia_old/include/effects \
+	external/skia_old/include/gpu \
+	external/skia_old/include/images \
+	external/skia_old/include/ports \
+	external/skia_old/include/utils \
+	external/skia_old/src/core \
+	external/skia_old/src/images \
+	external/skia_old/src/ports
+endif
 
 # Add Source/ for the include of <JavaScriptCore/config.h> from WebCore/config.h
 LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
@@ -209,9 +226,20 @@ LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
 	external/chromium/chrome/renderer \
 	external/chromium \
 	external/chromium/chrome \
+
+ifneq ($(ENABLE_OLD_SKIA),true)
+LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
 	external/skia
+else
+LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
+	external/skia_old
+endif
 
 LOCAL_CFLAGS += -DWEBKIT_IMPLEMENTATION=1
+
+ifeq ($(ENABLE_OLD_SKIA),true)
+LOCAL_CFLAGS += -DENABLE_OLD_SKIA=1
+endif
 
 # Include WTF source file.
 d := Source/JavaScriptCore
@@ -313,13 +341,18 @@ LOCAL_SHARED_LIBRARIES := \
 	liblog \
 	libmedia \
 	libnativehelper \
-	libskia \
 	libsqlite \
 	libssl \
 	libstlport \
 	libutils \
 	libui \
 	libz
+
+ifneq ($(ENABLE_OLD_SKIA),true)
+LOCAL_SHARED_LIBRARIES += libskia
+else
+LOCAL_SHARED_LIBRARIES += libskia_old
+endif
 
 # We have to fake out some headers when using stlport.
 LOCAL_C_INCLUDES += \

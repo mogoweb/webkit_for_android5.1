@@ -62,7 +62,11 @@
 #include "FrameView.h"
 #include "Geolocation.h"
 #include "GraphicsContext.h"
+#if ENABLE(OLD_SKIA)
+#include "OldGraphicsJNI.h"
+#else
 #include "GraphicsJNI.h"
+#endif
 #include "HTMLAnchorElement.h"
 #include "HTMLAreaElement.h"
 #include "HTMLElement.h"

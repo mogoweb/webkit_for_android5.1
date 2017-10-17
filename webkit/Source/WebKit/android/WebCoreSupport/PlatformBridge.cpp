@@ -130,7 +130,7 @@ int PlatformBridge::PlatformBridge::screenDepth()
             android::ISurfaceComposer::eDisplayIdMain));
     android::DisplayInfo info;
     android::SurfaceComposerClient::getDisplayInfo(display, &info);
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     return info.pixelFormatInfo.bitsPerPixel;
 #else
     //~: TODO(alex)

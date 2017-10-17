@@ -100,7 +100,7 @@ void TransferQueue::cleanupGLResources()
 
 void TransferQueue::initGLResources(int width, int height)
 {
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     android::Mutex::Autolock lock(m_transferQueueItemLocks);
     if (!m_sharedSurfaceTextureId) {
         glGenTextures(1, &m_sharedSurfaceTextureId);

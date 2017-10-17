@@ -36,7 +36,11 @@
 #include "VideoLayerAndroid.h"
 #include "WebCoreJni.h"
 #include "WebViewCore.h"
+#if ENABLE(OLD_SKIA)
+#include <OldGraphicsJNI.h>
+#else
 #include <GraphicsJNI.h>
+#endif
 #include <JNIHelp.h>
 #include <JNIUtility.h>
 #include <SkBitmap.h>

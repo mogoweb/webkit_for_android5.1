@@ -107,6 +107,10 @@ LOCAL_SRC_FILES += \
 	android/wds/ConnectionAndroid.cpp \
 	android/wds/DebugServer.cpp
 
+ifeq ($(ENABLE_OLD_SKIA),true)
+LOCAL_SRC_FILES += android/jni/Graphics.cpp
+endif
+
 LOCAL_C_INCLUDES += \
 	external/openssl/include \
 	libcore/include

@@ -36,7 +36,11 @@
 #include "FrameLoader.h"
 #include "FrameLoaderClientAndroid.h"
 #include "FrameTree.h"
+#if ENABLE(OLD_SKIA)
+#include "OldGraphicsJNI.h"
+#else
 #include "GraphicsJNI.h"
+#endif
 #include "HistoryItem.h"
 #include "IconDatabase.h"
 #include "Page.h"

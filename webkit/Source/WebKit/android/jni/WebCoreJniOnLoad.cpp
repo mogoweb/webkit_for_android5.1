@@ -94,6 +94,10 @@ extern int registerCookieManager(JNIEnv*);
 
 }
 
+#if ENABLE(OLD_SKIA)
+extern int register_android_graphics_Graphics(JNIEnv* env);
+#endif
+
 struct RegistrationMethod {
     const char* name;
     int (*func)(JNIEnv*);
@@ -119,6 +123,9 @@ static RegistrationMethod gWebCoreRegMethods[] = {
 #endif
     { "DeviceMotionAndOrientationManager", android::registerDeviceMotionAndOrientationManager },
     { "CookieManager", android::registerCookieManager },
+#if ENABLE(OLD_SKIA)
+    { "GraphicsJni", register_android_graphics_Graphics },
+#endif
 };
 
 EXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)

@@ -130,7 +130,7 @@ SkBitmap* ImageTexture::convertBitmap(SkBitmap* bitmap)
     dest.set(0, 0, w, h);
 #if ENABLE(OLD_SKIA)
     img->setIsOpaque(false);
-else
+#else
     img->setAlphaType(kPremul_SkAlphaType);
 #endif
     img->eraseARGB(0, 0, 0, 0);

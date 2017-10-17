@@ -280,7 +280,7 @@ MediaTexture::TextureWrapper* MediaTexture::createTexture()
 
     // populate the wrapper
     glGenTextures(1, &wrapper->textureId);
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     wrapper->surfaceTexture = new android::GLConsumer(wrapper->textureId);
     wrapper->nativeWindow = new android::Surface(
             wrapper->surfaceTexture->getBufferQueue());
@@ -291,7 +291,7 @@ MediaTexture::TextureWrapper* MediaTexture::createTexture()
     wrapper->dimensions.setEmpty();
 
     // setup callback
-#if ENABLE(OLD_SKIA)
+#if 0  //~: TODO(alex)
     wrapper->mediaListener = new MediaListener(m_weakWebViewRef,
                                                wrapper->surfaceTexture,
                                                wrapper->nativeWindow);
