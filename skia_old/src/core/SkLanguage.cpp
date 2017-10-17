@@ -20,7 +20,9 @@ SkLanguage SkLanguage::getParent() const {
     SkASSERT(tag != NULL);
 
     // strip off the rightmost "-.*"
-    char* parentTagEnd = strrchr(tag, '-');
+    char ctag[256] = {0};
+    strncpy(ctag, tag, sizeof(ctag));
+    char* parentTagEnd = strrchr(ctag, '-');
     if (parentTagEnd == NULL) {
         return SkLanguage("");
     }
