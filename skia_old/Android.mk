@@ -72,7 +72,9 @@ ifeq ($(NO_FALLBACK_FONT),true)
 	LOCAL_CFLAGS += -DNO_FALLBACK_FONT
 endif
 
-
+LOCAL_CFLAGS += \
+	-U_FORTIFY_SOURCE \
+	-D_FORTIFY_SOURCE=1
 
 LOCAL_SRC_FILES:= \
 	src/core/Sk64.cpp \
