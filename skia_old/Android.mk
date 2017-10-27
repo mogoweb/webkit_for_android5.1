@@ -467,7 +467,7 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_STATIC_LIBRARIES := \
 	libpng \
-	libgif \
+	libgif_old \
 	libwebp-decode \
 	libwebp-encode
 
@@ -488,7 +488,7 @@ LOCAL_C_INCLUDES := \
 	external/freetype/include \
 	external/zlib \
 	external/libpng \
-	external/giflib \
+	$(BASE_PATH)/third_party/giflib \
 	external/jpeg \
 	external/webp/include \
 	frameworks/base/opengl/include \
@@ -507,6 +507,11 @@ LOCAL_EXPORT_C_INCLUDES := \
 LOCAL_MODULE:= libskia_old
 
 include $(BUILD_SHARED_LIBRARY)
+
+#############################################################
+# Build the old giflib from Android 4.3
+#
+include $(BASE_PATH)/third_party/giflib/Android.mk
 
 #############################################################
 # Build the skia tools
