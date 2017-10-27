@@ -21,11 +21,11 @@
 
 #include "SkCanvas.h"
 
-#define DEBUG_SKIA_DRAWING 1
+#define DEBUG_SKIA_DRAWING 0
 #if DEBUG_SKIA_DRAWING
 #include "AndroidLog.h" // NOTE: AndroidLog.h normally shouldn't be included in a header
 #include "FloatRect.h"
-#define WRAPCANVAS_LOG_ENTRY(...) {ALOGI("non-rect %s, m_isSolidColor %d", __FUNCTION__, m_isSolidColor);}
+#define WRAPCANVAS_LOG_ENTRY(...) {ALOGD("non-rect %s, m_isSolidColor %d", __FUNCTION__, m_isSolidColor);}
 #else
 #define WRAPCANVAS_LOG_ENTRY(...) ((void)0)
 #endif

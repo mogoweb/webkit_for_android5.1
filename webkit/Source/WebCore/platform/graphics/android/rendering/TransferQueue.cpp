@@ -441,14 +441,14 @@ bool TransferQueue::tryUpdateQueueWithBitmap(const TileRenderInfo* renderInfo,
     bool ready = readyForUpdate();
     TextureUploadType currentUploadType = m_currentUploadType;
     if (!ready) {
-        ALOGI("Quit bitmap update: not ready! for tile x y %d %d",
+        ALOGV("Quit bitmap update: not ready! for tile x y %d %d",
               renderInfo->x, renderInfo->y);
         return false;
     }
     if (currentUploadType == GpuUpload) {
         // a) Dequeue the Surface Texture and write into the buffer
         if (!m_ANW.get()) {
-            ALOGE("ERROR: ANW is null");
+            ALOGV("ERROR: ANW is null");
             return false;
         }
 
@@ -459,7 +459,7 @@ bool TransferQueue::tryUpdateQueueWithBitmap(const TileRenderInfo* renderInfo,
     // b) After update the Surface Texture, now udpate the transfer queue info.
     addItemInTransferQueue(renderInfo, currentUploadType, bitmap);
 
-    ALOGI("Bitmap updated x, y %d %d, baseTile %p",
+    ALOGV("Bitmap updated x, y %d %d, baseTile %p",
           renderInfo->x, renderInfo->y, renderInfo->baseTile);
     return true;
 }

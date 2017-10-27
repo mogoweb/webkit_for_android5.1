@@ -895,7 +895,7 @@ class GLDrawFunctor : Functor {
             wvInstance->postInvalidateDelayed(1, finalInval);
         }
         // return 1 if invalidation needed, 2 to request non-drawing functor callback, 0 otherwise
-        ALOGI("returnFlags are %d, shouldDraw %d", returnFlags, shouldDraw);
+        ALOGV("returnFlags are %d, shouldDraw %d", returnFlags, shouldDraw);
         return uirenderer::DrawGlInfo::kStatusDone;
     }
     void updateScreenRect(WebCore::IntRect& _screenRect) {
