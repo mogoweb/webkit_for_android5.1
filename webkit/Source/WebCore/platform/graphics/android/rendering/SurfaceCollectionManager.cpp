@@ -30,13 +30,19 @@
 #include "SurfaceCollectionManager.h"
 
 #include "AndroidLog.h"
+#if 0  //~: TODO(alex)
 #include "private/hwui/DrawGlInfo.h"
+#else
+#include "ADrawGlInfo.h"
+#endif
 #include "TilesManager.h"
 #include "SurfaceCollection.h"
 
 namespace WebCore {
 
+#if 0  //~: TODO(alex)
 using namespace android::uirenderer;
+#endif
 
 // Tag used to display current number of SurfaceCollections.
 // Note: this will only work if one webview is actively drawing at a time.
@@ -216,8 +222,8 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
             returnFlags |= DrawGlInfo::kStatusDraw;
 #else
         {
-            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
-            returnFlags |= DrawGlInfo::kStatusDrew;
+            ALOGW("%s: %d use ADrawGlInfo kStatusDraw", __FILE__, __LINE__);
+            returnFlags |= ADrawGlInfo::kStatusDraw;
         }
 #endif
         else
@@ -231,7 +237,10 @@ int SurfaceCollectionManager::singleSurfaceModeInvalidation(bool hasRunningAnima
 #if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-        ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
+    {
+        ALOGW("%s: %d use ADrawGlInfo kStatusInvoke", __FILE__, __LINE__);
+        returnFlags |= ADrawGlInfo::kStatusInvoke;
+    }
 #endif
 
     m_newPaintingCollection = false;
@@ -279,8 +288,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if 0  //~: TODO(alex)
             returnFlags |= uirenderer::DrawGlInfo::kStatusDraw;
 #else
-            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
-            returnFlags |= DrawGlInfo::kStatusDrew;
+            ALOGW("%s: %d use ADrawGlInfo kStatusDraw", __FILE__, __LINE__);
+            returnFlags |= ADrawGlInfo::kStatusDraw;
 #endif
         }
     } else if (m_drawingCollection) {
@@ -293,7 +302,10 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-        ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
+    {
+        ALOGW("%s: %d use ADrawGlInfo kStatusInvoke", __FILE__, __LINE__);
+        returnFlags |= ADrawGlInfo::kStatusInvoke;
+    }
 #endif
 
     if (!shouldDraw) {
@@ -309,8 +321,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusDraw;
 #else
-            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
-            returnFlags |= DrawGlInfo::kStatusDrew;
+            ALOGW("%s: %d use ADrawGlInfo kStatusDraw", __FILE__, __LINE__);
+            returnFlags |= ADrawGlInfo::kStatusDraw;
 #endif
         } else {
             // current collection not ready - invoke functor in process mode
@@ -318,7 +330,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
+            ALOGW("%s: %d use ADrawGlInfo kStatusInvoke", __FILE__, __LINE__);
+            returnFlags |= ADrawGlInfo::kStatusInvoke;
 #endif
         }
 
@@ -347,7 +360,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if 0  //~: TODO(alex)
             returnFlags |= DrawGlInfo::kStatusInvoke;
 #else
-            ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusInvoke", __LINE__);
+            ALOGW("%s: %d use ADrawGlInfo kStatusInvoke", __FILE__, __LINE__);
+            returnFlags |= ADrawGlInfo::kStatusInvoke;
 #endif
         }
 
@@ -382,10 +396,8 @@ int SurfaceCollectionManager::drawGL(double currentTime, IntRect& viewRect,
 #if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusDraw;
 #else
-    {
-        ALOGW("%d SurfaceCollectionManager::drawGL DrawGlInfo has no kStatusDraw, use kStatusDrew instead", __LINE__);
-        returnFlags |= DrawGlInfo::kStatusDrew;
-    }
+        ALOGW("%s: %d use ADrawGlInfo kStatusDraw", __FILE__, __LINE__);
+        returnFlags |= ADrawGlInfo::kStatusDraw;
 #endif
 
     ALOGV("returnFlags %d,  m_paintingCollection %d ", returnFlags, m_paintingCollection);

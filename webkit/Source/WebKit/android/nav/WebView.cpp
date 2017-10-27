@@ -50,6 +50,7 @@
 #include "Node.h"
 #include "utils/Functor.h"
 #include "private/hwui/DrawGlInfo.h"
+#include "ADrawGlInfo.h"
 #include "PlatformGraphicsContext.h"
 #include "PlatformString.h"
 #include "ScrollableLayerAndroid.h"
@@ -813,36 +814,71 @@ class GLDrawFunctor : Functor {
         if (shouldDraw)
             wvInstance->updateRectsForGL();
         else {
-            ALOGI("GLDrawFunctor mode: %d. do nothing", messageId);
             return uirenderer::DrawGlInfo::kStatusDone;
         }
 
         if (invScreenRect.isEmpty()) {
             // NOOP operation if viewport is empty
-            return 0;
+            return uirenderer::DrawGlInfo::kStatusDone;
+        }
+
+        ADrawGlInfo aInfo;
+        switch (messageId) {
+          case uirenderer::DrawGlInfo::kModeDraw: {
+            aInfo.mode = ADrawGlInfo::kModeDraw;
+            uirenderer::DrawGlInfo* info = reinterpret_cast<uirenderer::DrawGlInfo*>(data);
+
+            // Map across the input values.
+            aInfo.clipLeft = info->clipLeft;
+            aInfo.clipTop = info->clipTop;
+            aInfo.clipRight = info->clipRight;
+            aInfo.clipBottom = info->clipBottom;
+            aInfo.width = info->width;
+            aInfo.height = info->height;
+            aInfo.isLayer = info->isLayer;
+            for (int i = 0; i < 16; ++i) {
+              aInfo.transform[i] = info->transform[i];
+            }
+            break;
+          }
+          case uirenderer::DrawGlInfo::kModeProcess:
+            aInfo.mode = ADrawGlInfo::kModeProcess;
+            break;
+          case uirenderer::DrawGlInfo::kModeProcessNoContext:
+            aInfo.mode = ADrawGlInfo::kModeProcessNoContext;
+            break;
+          case uirenderer::DrawGlInfo::kModeSync:
+            aInfo.mode = ADrawGlInfo::kModeSync;
+            break;
+          default:
+            ALOGE("Unexpected DrawGLInfo type %d", messageId);
+            return uirenderer::DrawGlInfo::kStatusDone;
         }
 
         WebCore::IntRect inval;
         int titlebarHeight = screenRect.height() - invScreenRect.height();
 
-        uirenderer::DrawGlInfo* info = reinterpret_cast<uirenderer::DrawGlInfo*>(data);
-        WebCore::IntRect screenClip(info->clipLeft, info->clipTop,
-                                    info->clipRight - info->clipLeft,
-                                    info->clipBottom - info->clipTop);
+        WebCore::IntRect screenClip(aInfo.clipLeft, aInfo.clipTop,
+                                    aInfo.clipRight - aInfo.clipLeft,
+                                    aInfo.clipBottom - aInfo.clipTop);
 
         WebCore::IntRect localInvScreenRect = invScreenRect;
-        if (info->isLayer) {
+        if (aInfo.isLayer) {
             // When webview is on a layer, we need to use the viewport relative
             // to the FBO, rather than the screen(which will use invScreenRect).
             localInvScreenRect.setX(screenClip.x());
-            localInvScreenRect.setY(info->height - screenClip.y() - screenClip.height());
+            localInvScreenRect.setY(aInfo.height - screenClip.y() - screenClip.height());
         }
         // Send the necessary info to the shader.
-        TilesManager::instance()->shader()->setGLDrawInfo(info);
+        TilesManager::instance()->shader()->setGLDrawInfo(&aInfo);
 
         int returnFlags = (*wvInstance.*funcPtr)(localInvScreenRect, &inval, screenRect,
                 titlebarHeight, screenClip, scale, extras, shouldDraw);
-        if (false/*(returnFlags & uirenderer::DrawGlInfo::kStatusDraw) != 0*/) {
+#if 0  //~: TODO(alex)
+        if ((returnFlags & uirenderer::DrawGlInfo::kStatusDraw) != 0) {
+#else
+        if ((returnFlags & ADrawGlInfo::kStatusDraw) != 0) {
+#endif
             IntRect finalInval;
             if (inval.isEmpty())
                 finalInval = screenRect;
@@ -852,13 +888,14 @@ class GLDrawFunctor : Functor {
                 finalInval.setWidth(inval.width());
                 finalInval.setHeight(inval.height());
             }
-            info->dirtyLeft = finalInval.x();
-            info->dirtyTop = finalInval.y();
-            info->dirtyRight = finalInval.maxX();
-            info->dirtyBottom = finalInval.maxY();
+            aInfo.dirtyLeft = finalInval.x();
+            aInfo.dirtyTop = finalInval.y();
+            aInfo.dirtyRight = finalInval.maxX();
+            aInfo.dirtyBottom = finalInval.maxY();
+            wvInstance->postInvalidateDelayed(1, finalInval);
         }
         // return 1 if invalidation needed, 2 to request non-drawing functor callback, 0 otherwise
-        ALOGV("returnFlags are %d, shouldDraw %d", returnFlags, shouldDraw);
+        ALOGI("returnFlags are %d, shouldDraw %d", returnFlags, shouldDraw);
         return uirenderer::DrawGlInfo::kStatusDone;
     }
     void updateScreenRect(WebCore::IntRect& _screenRect) {

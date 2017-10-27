@@ -24,7 +24,11 @@
 #include "IntRect.h"
 #include "SkRect.h"
 #include "TransformationMatrix.h"
+#if 0  //~: TODO(alex)
 #include "private/hwui/DrawGlInfo.h"
+#else
+#include "ADrawGlInfo.h"
+#endif
 #include <GLES2/gl2.h>
 
 #define MAX_CONTRAST 5
@@ -160,7 +164,11 @@ public:
             contrast = MAX_CONTRAST;
         m_contrast = contrast;
     }
+#if 0  //~: TODO(alex)
     void setGLDrawInfo(const android::uirenderer::DrawGlInfo* info);
+#else
+    void setGLDrawInfo(const ADrawGlInfo* info);
+#endif
     void forceNeedsInit() { m_needsInit = true; }
     bool needsInit() { return m_needsInit; }
     bool usePointSampling(float tileScale, const TransformationMatrix* layerTransform);

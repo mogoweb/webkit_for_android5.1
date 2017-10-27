@@ -37,7 +37,11 @@
 #include "GLUtils.h"
 #include "ImagesManager.h"
 #include "LayerAndroid.h"
+#if 0  //~: TODO(alex)
 #include "private/hwui/DrawGlInfo.h"
+#else
+#include "ADrawGlInfo.h"
+#endif
 #include "ScrollableLayerAndroid.h"
 #include "SkPath.h"
 #include "TilesManager.h"
@@ -60,7 +64,9 @@
 
 namespace WebCore {
 
+#if 0  //~: TODO(alex)
 using namespace android::uirenderer;
+#endif
 
 GLWebViewState::GLWebViewState()
     : m_frameworkLayersInval(0, 0, 0, 0)
@@ -356,8 +362,8 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 #else
     {
         //~: no kStatusDraw defined in Android5.1, use kStatusDrew?
-        ALOGW("use DrawGlInfo::kStatusDrew instead of DrawGlInfo::kStatusDraw");
-        returnFlags |= DrawGlInfo::kStatusDrew;
+        ALOGW("%s:%d use DrawGlInfo::kStatusDrew instead of DrawGlInfo::kStatusDraw", __FILE__, __LINE__);
+        returnFlags |= ADrawGlInfo::kStatusDraw;
     }
 #endif
 
@@ -393,7 +399,8 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 #if 0  //~: TODO(alex)
         returnFlags |= DrawGlInfo::kStatusDraw | DrawGlInfo::kStatusInvoke;
 #else
-        ALOGW("no DrawGlInfo::kStatusDraw and DrawGlInfo::kStatusInvoke defined");
+        ALOGW("%s:%d use ADrawGlInfo kStatusDraw and kStatusInvoke", __FILE__, __LINE__);
+        returnFlags |= ADrawGlInfo::kStatusDraw | ADrawGlInfo::kStatusInvoke;
 #endif
     }
 
@@ -402,7 +409,7 @@ int GLWebViewState::drawGL(IntRect& invScreenRect, SkRect& visibleContentRect,
 #if 0  //~: TODO(alex)
     if (returnFlags & DrawGlInfo::kStatusDraw) {
 #else
-    if (returnFlags & DrawGlInfo::kStatusDrew) {
+    if (returnFlags & ADrawGlInfo::kStatusDraw) {
 #endif
         // returnFlags & kStatusDraw && empty inval region means we've inval'd everything,
         // but don't have new content. Keep redrawing full view (0,0,0,0)

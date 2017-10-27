@@ -40,15 +40,13 @@ int MemoryUsage::memoryUsageMb(bool /* forceFresh */)
 {
 #if 0  //~: TODO(alex)
     size_t footprint = dlmalloc_footprint() >> 20;
+#else
+    size_t footprint = 0;
+#endif
     v8::HeapStatistics stat;
     v8::V8::GetHeapStatistics(&stat);
     unsigned v8Usage = stat.total_heap_size() >> 20;
     return footprint + v8Usage;
-#else
-    //~: TODO(alex)
-    ALOGW("MemoryUsage::memoryUsageMb NOTIMPLEMENTED");
-    return 0;
-#endif
 }
 
 int MemoryUsage::m_lowMemoryUsageMb = 0;

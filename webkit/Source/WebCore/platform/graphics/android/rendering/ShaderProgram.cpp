@@ -890,7 +890,11 @@ void ShaderProgram::drawVideoLayerQuad(const TransformationMatrix& drawMatrix,
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
+#if 0  //~: TODO(alex)
 void ShaderProgram::setGLDrawInfo(const android::uirenderer::DrawGlInfo* info)
+#else
+void ShaderProgram::setGLDrawInfo(const ADrawGlInfo* info)
+#endif
 {
     GLUtils::convertToTransformationMatrix(info->transform, m_webViewMatrix);
     m_alphaLayer = info->isLayer;
