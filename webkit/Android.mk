@@ -351,7 +351,8 @@ LOCAL_SHARED_LIBRARIES := \
 ifneq ($(ENABLE_OLD_SKIA),true)
 LOCAL_SHARED_LIBRARIES += libskia
 else
-LOCAL_SHARED_LIBRARIES += libskia_old
+LOCAL_SHARED_LIBRARIES += libskia_old \
+	libjnigraphics
 endif
 
 # We have to fake out some headers when using stlport.
