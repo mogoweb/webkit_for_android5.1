@@ -4635,7 +4635,7 @@ static jint RecordContent(JNIEnv* env, jobject obj, jint nativeClass, jobject pt
     WebViewCore* viewImpl = reinterpret_cast<WebViewCore*>(nativeClass);
     SkIPoint nativePt;
     BaseLayerAndroid* result = viewImpl->recordContent(&nativePt);
-    GraphicsJNI::ipoint_to_jpoint(nativePt, env, pt);
+    OldGraphicsJNI::ipoint_to_jpoint(nativePt, env, pt);
     return reinterpret_cast<jint>(result);
 }
 
@@ -4988,7 +4988,7 @@ static void ScrollRenderLayer(JNIEnv* env, jobject obj, jint nativeClass,
         jint layer, jobject jRect)
 {
     SkRect rect;
-    GraphicsJNI::jrect_to_rect(env, jRect, &rect);
+    OldGraphicsJNI::jrect_to_rect(env, jRect, &rect);
     reinterpret_cast<WebViewCore*>(nativeClass)->scrollRenderLayer(layer, rect);
 }
 

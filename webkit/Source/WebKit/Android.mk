@@ -108,7 +108,8 @@ LOCAL_SRC_FILES += \
 	android/wds/DebugServer.cpp
 
 ifeq ($(ENABLE_OLD_SKIA),true)
-LOCAL_SRC_FILES += android/jni/Graphics.cpp
+LOCAL_SRC_FILES += android/jni/Graphics.cpp \
+	android/jni/JavaBitmap.cpp
 endif
 
 LOCAL_C_INCLUDES += \

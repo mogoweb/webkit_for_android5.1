@@ -268,7 +268,7 @@ static jobject WebHistoryGetFavicon(JNIEnv* env, jobject obj, jint ptr)
     WebHistoryItem* item = reinterpret_cast<WebHistoryItem*>(ptr);
     MutexLocker locker(item->m_lock);
     if (!item->m_faviconCached && item->m_favicon) {
-        jobject favicon = GraphicsJNI::createBitmap(env,
+        jobject favicon = OldGraphicsJNI::createBitmap(env,
                                                     item->m_favicon,
                                                     false, NULL);
         item->m_favicon = 0; // Framework now owns the pointer

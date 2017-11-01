@@ -4,6 +4,7 @@
 
 #include "jni.h"
 #include "JNIHelp.h"
+#include "JavaBitmap.h"
 #include "OldGraphicsJNI.h"
 
 #include <utils/Log.h>
@@ -42,7 +43,7 @@
 //     jniThrowException(env, "java/io/IOException", msg);
 // }
 
-bool GraphicsJNI::hasException(JNIEnv *env) {
+bool OldGraphicsJNI::hasException(JNIEnv *env) {
     if (env->ExceptionCheck() != 0) {
         ALOGE("*** Uncaught exception returned from Java call!\n");
         env->ExceptionDescribe();
@@ -178,7 +179,7 @@ static jmethodID gRegion_constructorMethodID;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphicsJNI::get_jrect(JNIEnv* env, jobject obj, int* L, int* T, int* R, int* B)
+void OldGraphicsJNI::get_jrect(JNIEnv* env, jobject obj, int* L, int* T, int* R, int* B)
 {
     SkASSERT(env->IsInstanceOf(obj, gRect_class));
 
@@ -188,7 +189,7 @@ void GraphicsJNI::get_jrect(JNIEnv* env, jobject obj, int* L, int* T, int* R, in
     *B = env->GetIntField(obj, gRect_bottomFieldID);
 }
 
-void GraphicsJNI::set_jrect(JNIEnv* env, jobject obj, int L, int T, int R, int B)
+void OldGraphicsJNI::set_jrect(JNIEnv* env, jobject obj, int L, int T, int R, int B)
 {
     SkASSERT(env->IsInstanceOf(obj, gRect_class));
 
@@ -198,7 +199,7 @@ void GraphicsJNI::set_jrect(JNIEnv* env, jobject obj, int L, int T, int R, int B
     env->SetIntField(obj, gRect_bottomFieldID, B);
 }
 
-SkIRect* GraphicsJNI::jrect_to_irect(JNIEnv* env, jobject obj, SkIRect* ir)
+SkIRect* OldGraphicsJNI::jrect_to_irect(JNIEnv* env, jobject obj, SkIRect* ir)
 {
     SkASSERT(env->IsInstanceOf(obj, gRect_class));
 
@@ -209,7 +210,7 @@ SkIRect* GraphicsJNI::jrect_to_irect(JNIEnv* env, jobject obj, SkIRect* ir)
     return ir;
 }
 
-void GraphicsJNI::irect_to_jrect(const SkIRect& ir, JNIEnv* env, jobject obj)
+void OldGraphicsJNI::irect_to_jrect(const SkIRect& ir, JNIEnv* env, jobject obj)
 {
     SkASSERT(env->IsInstanceOf(obj, gRect_class));
 
@@ -219,7 +220,7 @@ void GraphicsJNI::irect_to_jrect(const SkIRect& ir, JNIEnv* env, jobject obj)
     env->SetIntField(obj, gRect_bottomFieldID, ir.fBottom);
 }
 
-SkRect* GraphicsJNI::jrectf_to_rect(JNIEnv* env, jobject obj, SkRect* r)
+SkRect* OldGraphicsJNI::jrectf_to_rect(JNIEnv* env, jobject obj, SkRect* r)
 {
     SkASSERT(env->IsInstanceOf(obj, gRectF_class));
 
@@ -230,7 +231,7 @@ SkRect* GraphicsJNI::jrectf_to_rect(JNIEnv* env, jobject obj, SkRect* r)
     return r;
 }
 
-SkRect* GraphicsJNI::jrect_to_rect(JNIEnv* env, jobject obj, SkRect* r)
+SkRect* OldGraphicsJNI::jrect_to_rect(JNIEnv* env, jobject obj, SkRect* r)
 {
     SkASSERT(env->IsInstanceOf(obj, gRect_class));
 
@@ -241,7 +242,7 @@ SkRect* GraphicsJNI::jrect_to_rect(JNIEnv* env, jobject obj, SkRect* r)
     return r;
 }
 
-void GraphicsJNI::rect_to_jrectf(const SkRect& r, JNIEnv* env, jobject obj)
+void OldGraphicsJNI::rect_to_jrectf(const SkRect& r, JNIEnv* env, jobject obj)
 {
     SkASSERT(env->IsInstanceOf(obj, gRectF_class));
 
@@ -251,7 +252,7 @@ void GraphicsJNI::rect_to_jrectf(const SkRect& r, JNIEnv* env, jobject obj)
     env->SetFloatField(obj, gRectF_bottomFieldID, SkScalarToFloat(r.fBottom));
 }
 
-SkIPoint* GraphicsJNI::jpoint_to_ipoint(JNIEnv* env, jobject obj, SkIPoint* point)
+SkIPoint* OldGraphicsJNI::jpoint_to_ipoint(JNIEnv* env, jobject obj, SkIPoint* point)
 {
     SkASSERT(env->IsInstanceOf(obj, gPoint_class));
 
@@ -260,7 +261,7 @@ SkIPoint* GraphicsJNI::jpoint_to_ipoint(JNIEnv* env, jobject obj, SkIPoint* poin
     return point;
 }
 
-void GraphicsJNI::ipoint_to_jpoint(const SkIPoint& ir, JNIEnv* env, jobject obj)
+void OldGraphicsJNI::ipoint_to_jpoint(const SkIPoint& ir, JNIEnv* env, jobject obj)
 {
     SkASSERT(env->IsInstanceOf(obj, gPoint_class));
 
@@ -268,7 +269,7 @@ void GraphicsJNI::ipoint_to_jpoint(const SkIPoint& ir, JNIEnv* env, jobject obj)
     env->SetIntField(obj, gPoint_yFieldID, ir.fY);
 }
 
-SkPoint* GraphicsJNI::jpointf_to_point(JNIEnv* env, jobject obj, SkPoint* point)
+SkPoint* OldGraphicsJNI::jpointf_to_point(JNIEnv* env, jobject obj, SkPoint* point)
 {
     SkASSERT(env->IsInstanceOf(obj, gPointF_class));
 
@@ -277,7 +278,7 @@ SkPoint* GraphicsJNI::jpointf_to_point(JNIEnv* env, jobject obj, SkPoint* point)
     return point;
 }
 
-void GraphicsJNI::point_to_jpointf(const SkPoint& r, JNIEnv* env, jobject obj)
+void OldGraphicsJNI::point_to_jpointf(const SkPoint& r, JNIEnv* env, jobject obj)
 {
     SkASSERT(env->IsInstanceOf(obj, gPointF_class));
 
@@ -285,13 +286,14 @@ void GraphicsJNI::point_to_jpointf(const SkPoint& r, JNIEnv* env, jobject obj)
     env->SetFloatField(obj, gPointF_yFieldID, SkScalarToFloat(r.fY));
 }
 
-SkBitmap* GraphicsJNI::getNativeBitmap(JNIEnv* env, jobject bitmap) {
+SkBitmap* OldGraphicsJNI::getNativeBitmap(JNIEnv* env, jobject bitmap) {
     SkASSERT(env);
     SkASSERT(bitmap);
     SkASSERT(env->IsInstanceOf(bitmap, gBitmap_class));
-    SkBitmap* b = (SkBitmap*)env->GetIntField(bitmap, gBitmap_nativeInstanceID);
-    SkASSERT(b);
-    return b;
+    android::JavaBitmap jbitmap(bitmap);
+    static SkBitmap b = CreateSkBitmapFromJavaBitmap(jbitmap);
+
+    return &b;
 }
 
 // SkBitmap::Config GraphicsJNI::getNativeBitmapConfig(JNIEnv* env,
@@ -308,7 +310,7 @@ SkBitmap* GraphicsJNI::getNativeBitmap(JNIEnv* env, jobject bitmap) {
 //     return static_cast<SkBitmap::Config>(c);
 // }
 
-SkCanvas* GraphicsJNI::getNativeCanvas(JNIEnv* env, jobject canvas) {
+SkCanvas* OldGraphicsJNI::getNativeCanvas(JNIEnv* env, jobject canvas) {
     SkASSERT(env);
     SkASSERT(canvas);
     SkASSERT(env->IsInstanceOf(canvas, gCanvas_class));
@@ -326,7 +328,7 @@ SkCanvas* GraphicsJNI::getNativeCanvas(JNIEnv* env, jobject canvas) {
 //     return p;
 // }
 
-SkPicture* GraphicsJNI::getNativePicture(JNIEnv* env, jobject picture)
+SkPicture* OldGraphicsJNI::getNativePicture(JNIEnv* env, jobject picture)
 {
     SkASSERT(env);
     SkASSERT(picture);
@@ -348,7 +350,7 @@ SkPicture* GraphicsJNI::getNativePicture(JNIEnv* env, jobject picture)
 
 // ///////////////////////////////////////////////////////////////////////////////////////////
 
-jobject GraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, jbyteArray buffer,
+jobject OldGraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, jbyteArray buffer,
                                   bool isMutable, jbyteArray ninepatch, jintArray layoutbounds,
                                   int density)
 {
@@ -361,7 +363,7 @@ jobject GraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, jbyteArray buff
     return obj;
 }
 
-jobject GraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, bool isMutable,
+jobject OldGraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, bool isMutable,
                             jbyteArray ninepatch, int density)
 {
     return createBitmap(env, bitmap, NULL, isMutable, ninepatch, NULL, density);
@@ -588,8 +590,8 @@ int register_android_graphics_Graphics(JNIEnv* env)
     gPointF_xFieldID = getFieldIDCheck(env, gPointF_class, "x", "F");
     gPointF_yFieldID = getFieldIDCheck(env, gPointF_class, "y", "F");
 
-    // gBitmap_class = make_globalref(env, "android/graphics/Bitmap");
-    // gBitmap_nativeInstanceID = getFieldIDCheck(env, gBitmap_class, "mNativeBitmap", "I");
+    gBitmap_class = make_globalref(env, "android/graphics/Bitmap");
+    gBitmap_nativeInstanceID = getFieldIDCheck(env, gBitmap_class, "mNativeBitmap", "J");
     // gBitmap_constructorMethodID = env->GetMethodID(gBitmap_class, "<init>",
     //                                         "(I[BZ[B[II)V");
     // gBitmapRegionDecoder_class = make_globalref(env, "android/graphics/BitmapRegionDecoder");

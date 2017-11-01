@@ -602,7 +602,7 @@ static void OnPosterFetched(JNIEnv* env, jobject obj, jobject poster, int pointe
 
     WebCore::MediaPlayerPrivate* player = reinterpret_cast<WebCore::MediaPlayerPrivate*>(pointer);
 #if ENABLE(OLD_SKIA)
-    SkBitmap* posterNative = GraphicsJNI::getNativeBitmap(env, poster);
+    SkBitmap* posterNative = OldGraphicsJNI::getNativeBitmap(env, poster);
     if (!posterNative)
         return;
     player->onPosterFetched(posterNative);
