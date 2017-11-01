@@ -165,7 +165,7 @@ static jclass   gBitmapRegionDecoder_class;
 static jmethodID gBitmapRegionDecoder_constructorMethodID;
 
 static jclass   gCanvas_class;
-static jfieldID gCanvas_nativeInstanceID;
+static jfieldID gCanvas_bitmapID;
 
 static jclass   gPaint_class;
 static jfieldID gPaint_nativeInstanceID;
@@ -314,9 +314,12 @@ SkCanvas* OldGraphicsJNI::getNativeCanvas(JNIEnv* env, jobject canvas) {
     SkASSERT(env);
     SkASSERT(canvas);
     SkASSERT(env->IsInstanceOf(canvas, gCanvas_class));
-    SkCanvas* c = (SkCanvas*)env->GetIntField(canvas, gCanvas_nativeInstanceID);
-    SkASSERT(c);
-    return c;
+    jobject jbitmap = env->GetObjectField(canvas, gCanvas_bitmapID);
+    SkASSERT(jbitmap);
+    android::JavaBitmap javabitmap(jbitmap);
+    SkBitmap b = CreateSkBitmapFromJavaBitmap(javabitmap);
+    static SkCanvas c(b);
+    return &c;
 }
 
 // SkPaint* GraphicsJNI::getNativePaint(JNIEnv* env, jobject paint) {
@@ -601,8 +604,8 @@ int register_android_graphics_Graphics(JNIEnv* env)
     // gBitmapConfig_nativeInstanceID = getFieldIDCheck(env, gBitmapConfig_class,
     //                                                  "nativeInt", "I");
 
-    // gCanvas_class = make_globalref(env, "android/graphics/Canvas");
-    // gCanvas_nativeInstanceID = getFieldIDCheck(env, gCanvas_class, "mNativeCanvas", "I");
+    gCanvas_class = make_globalref(env, "android/graphics/Canvas");
+    gCanvas_bitmapID = getFieldIDCheck(env, gCanvas_class, "mBitmap", "Landroid/graphics/Bitmap;");
 
     // gPaint_class = make_globalref(env, "android/graphics/Paint");
     // gPaint_nativeInstanceID = getFieldIDCheck(env, gPaint_class, "mNativePaint", "I");

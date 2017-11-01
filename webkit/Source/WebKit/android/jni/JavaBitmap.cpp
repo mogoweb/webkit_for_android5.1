@@ -42,6 +42,9 @@ SkBitmap CreateSkBitmapFromJavaBitmap(const JavaBitmap& jbitmap) {
         case ANDROID_BITMAP_FORMAT_RGBA_8888:
             skbitmap.setConfig(SkBitmap::kARGB_8888_Config, src_size.width(), src_size.height());
             break;
+        case ANDROID_BITMAP_FORMAT_RGB_565:
+            skbitmap.setConfig(SkBitmap::kRGB_565_Config, src_size.width(), src_size.height());
+            break;
         case ANDROID_BITMAP_FORMAT_A_8:
             skbitmap.setConfig(SkBitmap::kA8_Config, src_size.width(), src_size.height());
             break;

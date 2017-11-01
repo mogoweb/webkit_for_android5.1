@@ -23,6 +23,11 @@
 ## OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##
 
+# use skia version from Android 4.3
+ifneq ($(ENABLE_OLD_SKIA),false)
+    ENABLE_OLD_SKIA := true
+endif
+
 # Control SVG compiling in webkit.
 # Default is true unless explictly disabled.
 ifneq ($(ENABLE_SVG),false)
