@@ -310,16 +310,14 @@ SkBitmap* OldGraphicsJNI::getNativeBitmap(JNIEnv* env, jobject bitmap) {
 //     return static_cast<SkBitmap::Config>(c);
 // }
 
-SkCanvas* OldGraphicsJNI::getNativeCanvas(JNIEnv* env, jobject canvas) {
+jobject OldGraphicsJNI::getCanvasBitmap(JNIEnv* env, jobject canvas) {
     SkASSERT(env);
     SkASSERT(canvas);
     SkASSERT(env->IsInstanceOf(canvas, gCanvas_class));
     jobject jbitmap = env->GetObjectField(canvas, gCanvas_bitmapID);
     SkASSERT(jbitmap);
-    android::JavaBitmap javabitmap(jbitmap);
-    SkBitmap b = CreateSkBitmapFromJavaBitmap(javabitmap);
-    static SkCanvas c(b);
-    return &c;
+
+    return jbitmap;
 }
 
 // SkPaint* GraphicsJNI::getNativePaint(JNIEnv* env, jobject paint) {

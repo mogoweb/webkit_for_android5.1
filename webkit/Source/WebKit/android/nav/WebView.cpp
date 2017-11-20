@@ -36,6 +36,7 @@
 #include "Frame.h"
 #include "GLWebViewState.h"
 #if ENABLE(OLD_SKIA)
+#include "JavaBitmap.h"
 // because skia not compatible with the android 5.1, so we cannot include GraphicsJNI.h directly.
 #include "OldGraphicsJNI.h"
 #else
@@ -954,11 +955,23 @@ static SkRect jrectf_to_rect(JNIEnv* env, jobject obj)
 static void nativeDraw(JNIEnv *env, jobject obj, jobject canv,
         jobject visible, jint color,
         jint extras) {
-    SkCanvas* canvas = OldGraphicsJNI::getNativeCanvas(env, canv);
+    jobject jbitmap = OldGraphicsJNI::getCanvasBitmap(env, canv);
+    ALOG_ASSERT(jbitmap, "bitmap is empty");
+
+    android::JavaBitmap javabitmap(jbitmap);
+    SkBitmap skbitmap = CreateSkBitmapFromJavaBitmap(javabitmap);
+    SkCanvas canvas(skbitmap);
+
     WebView* webView = GET_NATIVE_VIEW(env, obj);
     SkRect visibleContentRect = jrectf_to_rect(env, visible);
     webView->setVisibleContentRect(visibleContentRect);
-    webView->draw(canvas, color, static_cast<WebView::DrawExtras>(extras));
+    webView->draw(&canvas, color, static_cast<WebView::DrawExtras>(extras));
+
+    SkAutoLockPixels src_lock(skbitmap);
+    JavaBitmap dst_lock(jbitmap);
+    void* src_pixels = skbitmap.getPixels();
+    void* dst_pixels = dst_lock.pixels();
+    memcpy(dst_pixels, src_pixels, skbitmap.getSize());
 }
 
 static jint nativeCreateDrawGLFunction(JNIEnv *env, jobject obj, jint nativeView,
