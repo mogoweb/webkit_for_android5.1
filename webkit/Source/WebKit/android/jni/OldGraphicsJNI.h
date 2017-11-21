@@ -38,7 +38,7 @@ public:
     static SkPoint* jpointf_to_point(JNIEnv*, jobject jpointf, SkPoint* point);
     static void point_to_jpointf(const SkPoint& point, JNIEnv*, jobject jpointf);
 
-    static SkCanvas* getNativeCanvas(JNIEnv*, jobject canvas);
+    static jobject getCanvasBitmap(JNIEnv*, jobject canvas);
     // static SkPaint*  getNativePaint(JNIEnv*, jobject paint);
     static SkBitmap* getNativeBitmap(JNIEnv*, jobject bitmap);
     static SkPicture* getNativePicture(JNIEnv*, jobject picture);
