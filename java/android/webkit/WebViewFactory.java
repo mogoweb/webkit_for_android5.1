@@ -180,10 +180,6 @@ public final class WebViewFactory {
                     } catch (Exception e) {
                         sProviderInstance = providerClass.newInstance();
                     }
-                    {
-                        System.loadLibrary("webcore");
-                        System.loadLibrary("chromium_net");
-                    }
                     if (DEBUG) Log.v(LOGTAG, "Loaded provider: " + sProviderInstance);
                     return sProviderInstance;
                 } catch (Exception e) {

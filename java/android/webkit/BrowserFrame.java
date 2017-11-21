@@ -55,7 +55,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-//~: import org.apache.harmony.security.provider.cert.X509CertImpl;
 //~: import org.apache.harmony.xnet.provider.jsse.OpenSSLKey;
 //~: import org.apache.harmony.xnet.provider.jsse.OpenSSLKeyHolder;
 
@@ -1081,7 +1080,7 @@ class BrowserFrame extends Handler {
             String url) {
         final SslError sslError;
         try {
-            X509Certificate cert = null;//~: new X509CertImpl(certDER);
+            X509Certificate cert = new X509CertImpl(certDER);
             SslCertificate sslCert = new SslCertificate(cert);
             sslError = SslError.SslErrorFromChromiumErrorCode(certError, sslCert, url);
         } catch (Exception e) {
@@ -1202,7 +1201,7 @@ class BrowserFrame extends Handler {
      */
     private void setCertificate(byte cert_der[]) {
         try {
-            X509Certificate cert = null;//~: new X509CertImpl(cert_der);
+            X509Certificate cert = new X509CertImpl(cert_der);
             mCallbackProxy.onReceivedCertificate(new SslCertificate(cert));
         } catch (Exception e) {
             // Can't get the certificate, not much to do.
