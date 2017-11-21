@@ -156,7 +156,6 @@ static jfieldID gPointF_yFieldID;
 
 static jclass   gBitmap_class;
 static jfieldID gBitmap_nativeInstanceID;
-static jmethodID gBitmap_constructorMethodID;
 
 static jclass   gBitmapConfig_class;
 static jfieldID gBitmapConfig_nativeInstanceID;
@@ -357,9 +356,7 @@ jobject OldGraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, jbyteArray b
 {
     SkASSERT(bitmap);
     SkASSERT(bitmap->pixelRef());
-    jobject obj = env->NewObject(gBitmap_class, gBitmap_constructorMethodID,
-            static_cast<jint>(reinterpret_cast<uintptr_t>(bitmap)),
-            buffer, isMutable, ninepatch, layoutbounds, density);
+    jobject obj = android::ConvertToJavaBitmap(bitmap);
     hasException(env); // For the side effect of logging.
     return obj;
 }
@@ -593,8 +590,6 @@ int register_android_graphics_Graphics(JNIEnv* env)
 
     gBitmap_class = make_globalref(env, "android/graphics/Bitmap");
     gBitmap_nativeInstanceID = getFieldIDCheck(env, gBitmap_class, "mNativeBitmap", "J");
-    // gBitmap_constructorMethodID = env->GetMethodID(gBitmap_class, "<init>",
-    //                                         "(I[BZ[B[II)V");
     // gBitmapRegionDecoder_class = make_globalref(env, "android/graphics/BitmapRegionDecoder");
     // gBitmapRegionDecoder_constructorMethodID = env->GetMethodID(gBitmapRegionDecoder_class, "<init>", "(I)V");
 

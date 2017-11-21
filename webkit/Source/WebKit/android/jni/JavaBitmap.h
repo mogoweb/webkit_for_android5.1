@@ -63,6 +63,15 @@ private:
     JavaBitmap() {}
 };
 
+// Allocates a Java-backed bitmap (android.graphics.Bitmap) with the given
+// (non-empty!) size and color type.
+jobject CreateJavaBitmap(int width, int height, SkBitmap::Config config);
+
+// Converts |skbitmap| to a Java-backed bitmap (android.graphics.Bitmap).
+// Note: |skbitmap| is assumed to be non-null, non-empty and one of RGBA_8888 or
+// RGB_565 formats.
+jobject ConvertToJavaBitmap(const SkBitmap* skbitmap);
+
 // Converts |bitmap| to an SkBitmap of the same size and format.
 // Note: |jbitmap| is assumed to be non-null, non-empty and of format RGBA_8888.
 SkBitmap CreateSkBitmapFromJavaBitmap(const JavaBitmap& jbitmap);
