@@ -954,13 +954,14 @@ static SkRect jrectf_to_rect(JNIEnv* env, jobject obj)
 
 static void nativeDraw(JNIEnv *env, jobject obj, jobject canv,
         jobject visible, jint color,
-        jint extras) {
+        jint extras, jfloat scale) {
     jobject jbitmap = OldGraphicsJNI::getCanvasBitmap(env, canv);
     ALOG_ASSERT(jbitmap, "bitmap is empty");
 
     android::JavaBitmap javabitmap(jbitmap);
     SkBitmap skbitmap = CreateSkBitmapFromJavaBitmap(javabitmap);
     SkCanvas canvas(skbitmap);
+    canvas.scale(scale, scale);
 
     WebView* webView = GET_NATIVE_VIEW(env, obj);
     SkRect visibleContentRect = jrectf_to_rect(env, visible);
@@ -1444,7 +1445,7 @@ static JNINativeMethod gJavaWebViewMethods[] = {
         (void*) nativeCreate },
     { "nativeDestroy", "(I)V",
         (void*) nativeDestroy },
-    { "nativeDraw", "(Landroid/graphics/Canvas;Landroid/graphics/RectF;II)V",
+    { "nativeDraw", "(Landroid/graphics/Canvas;Landroid/graphics/RectF;IIF)V",
         (void*) nativeDraw },
     { "nativeCreateDrawGLFunction", "(ILandroid/graphics/Rect;Landroid/graphics/Rect;Landroid/graphics/RectF;FI)I",
         (void*) nativeCreateDrawGLFunction },

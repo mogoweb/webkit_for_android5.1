@@ -4344,7 +4344,7 @@ public final class WebViewClassic implements WebViewProvider, WebViewProvider.Sc
                 df = mScrollFilter;
             }
             canvas.setDrawFilter(df);
-            nativeDraw(canvas, mVisibleContentRect, mBackgroundColor, extras);
+            nativeDraw(canvas, mVisibleContentRect, mBackgroundColor, extras, getScale());
             canvas.setDrawFilter(null);
         }
 
@@ -8761,7 +8761,7 @@ public final class WebViewClassic implements WebViewProvider, WebViewProvider.Sc
     private static native void nativeDestroy(int ptr);
 
     private native void nativeDraw(Canvas canvas, RectF visibleRect,
-            int color, int extra);
+            int color, int extra, float scale);
     private native void     nativeDumpDisplayTree(String urlOrNull);
     private native boolean  nativeEvaluateLayersAnimations(int nativeInstance);
     private native int      nativeCreateDrawGLFunction(int nativeInstance, Rect invScreenRect,
