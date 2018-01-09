@@ -1251,6 +1251,7 @@ LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \
 	xml/XPathVariableReference.cpp
 
 # For XSLT
+ifeq ($(ENABLE_XSLT),true)
 LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \
 	loader/cache/CachedXSLStyleSheet.cpp \
 	dom/TransformSourceLibxslt.cpp \
@@ -1260,6 +1261,7 @@ LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \
 	xml/XSLTProcessorLibxslt.cpp \
 	xml/XSLTProcessor.cpp \
 	xml/XSLTUnicodeSort.cpp
+endif
 
 # For Archive
 LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \

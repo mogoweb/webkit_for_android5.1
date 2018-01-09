@@ -11,7 +11,7 @@ include $(CLEAR_VARS)
 LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_MODULE := libchromium_net
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_MODULE_CLASS := STATIC_LIBRARIES
 INTERMEDIATES := $(call local-intermediates-dir)
 
 LOCAL_SRC_FILES := \
@@ -491,4 +491,4 @@ ifneq ($(strip $(WITH_ADDRESS_SANITIZER)),)
     LOCAL_ADDRESS_SANITIZER := true
 endif
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)

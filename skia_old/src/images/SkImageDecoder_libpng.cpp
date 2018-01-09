@@ -1128,3 +1128,5 @@ SkImageEncoder* sk_libpng_efactory(SkImageEncoder::Type t) {
 
 static SkTRegistry<SkImageEncoder*, SkImageEncoder::Type> gEReg(sk_libpng_efactory);
 static SkTRegistry<SkImageDecoder*, SkStream*> gDReg(sk_libpng_dfactory);
+
+bool make_sure_png_registered() { return true; }

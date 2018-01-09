@@ -22,6 +22,11 @@ template DecodeReg* SkTRegistry<SkImageDecoder*, SkStream*>::gHead;
     extern SkImageDecoder* sk_libpng_dfactory(SkStream*);
 #endif
 
+extern bool make_sure_gif_registered();
+extern bool make_sure_jpeg_registered();
+extern bool make_sure_png_registered();
+static bool decoder_registered = make_sure_jpeg_registered() && make_sure_png_registered() && make_sure_gif_registered();
+
 SkImageDecoder* SkImageDecoder::Factory(SkStream* stream) {
     SkImageDecoder* codec = NULL;
     const DecodeReg* curr = DecodeReg::Head();

@@ -293,7 +293,7 @@ void Font::drawGlyphs(GraphicsContext* gc, const SimpleFontData* font,
 
         if (font->platformData().orientation() == Vertical)
             canvas->restore();
-    } else 
+    } else
 #endif
     {
         for (int i = 0; i < numGlyphs; i++) {
@@ -349,7 +349,7 @@ FloatRect Font::selectionRectForComplexText(const TextRun& run,
 void Font::drawComplexText(GraphicsContext* gc, TextRun const& run,
                            FloatPoint const& point, int, int) const
 {
-    SkCanvas*   canvas = gc->platformContext()->mCanvas;
+    SkCanvas*   canvas = gc->platformContext()->recordingCanvas();
     SkPaint     paint;
 
     if (!setupForText(&paint, gc, primaryFont())) {

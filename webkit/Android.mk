@@ -37,7 +37,7 @@ endif
 # Control complex scripts support compiling in webkit.
 # Default is true unless explictly disabled.
 ifneq ($(SUPPORT_COMPLEX_SCRIPTS),false)
-    SUPPORT_COMPLEX_SCRIPTS = true
+#    SUPPORT_COMPLEX_SCRIPTS = true
 endif
 
 # Read the environment variable to determine if Autofill is compiled.
@@ -45,6 +45,10 @@ endif
 # is turned on.
 ifneq ($(ENABLE_AUTOFILL),false)
   ENABLE_AUTOFILL = true
+endif
+
+ifneq ($(ENABLE_XSLT),true)
+    ENABLE_XSLT = false
 endif
 
 # Custom y-to-cpp rule
@@ -93,11 +97,15 @@ LOCAL_C_INCLUDES := \
 	external/icu/icu4c/source/i18n \
 	external/jpeg \
 	external/libxml2/include \
-	external/libxslt \
 	external/hyphenation \
 	external/sqlite/dist \
 	frameworks/base/core/jni/android/graphics \
 	frameworks/base/include
+
+ifeq ($(ENABLE_XSLT),true)
+LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
+	external/libxslt
+endif
 
 ifneq ($(ENABLE_OLD_SKIA),true)
 LOCAL_C_INCLUDES := $(LOCAL_C_INCLUDES) \
@@ -336,7 +344,6 @@ LOCAL_SHARED_LIBRARIES := \
 	libandroid \
 	libandroidfw \
 	libandroid_runtime \
-	libchromium_net \
 	libcrypto \
 	libcutils \
 	libdl \
@@ -353,13 +360,6 @@ LOCAL_SHARED_LIBRARIES := \
 	libui \
 	libz
 
-ifneq ($(ENABLE_OLD_SKIA),true)
-LOCAL_SHARED_LIBRARIES += libskia
-else
-LOCAL_SHARED_LIBRARIES += libskia_old \
-	libjnigraphics
-endif
-
 # We have to fake out some headers when using stlport.
 LOCAL_C_INCLUDES += \
 	external/chromium/android
@@ -375,7 +375,23 @@ LOCAL_CFLAGS += -DSUPPORT_COMPLEX_SCRIPTS=1
 endif
 
 # Build the list of static libraries
-LOCAL_STATIC_LIBRARIES := libxml2 libxslt libhyphenation libv8
+LOCAL_STATIC_LIBRARIES := libxml2 libxslt libhyphenation libv8 libchromium_net
+
+ifeq ($(ENABLE_XSLT),true)
+	LOCAL_CFLAGS += -DENABLE_XSLT=1
+	LOCAL_STATIC_LIBRARIES += libxslt
+endif
+
+ifneq ($(ENABLE_OLD_SKIA),true)
+	LOCAL_SHARED_LIBRARIES += libskia
+else
+LOCAL_STATIC_LIBRARIES += libskia_old libpng libgif_old
+LOCAL_SHARED_LIBRARIES += \
+	libjnigraphics \
+	libjpeg \
+	libft2 \
+	libemoji
+endif
 
 ifeq ($(ENABLE_AUTOFILL),true)
 LOCAL_SHARED_LIBRARIES += libexpat

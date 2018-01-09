@@ -31,7 +31,9 @@
 #endif
 #include "Font.h"
 #include "GlyphPageTreeNode.h"
+#ifdef SUPPORT_COMPLEX_SCRIPTS
 #include "HarfbuzzSkia.h"
+#endif
 #include "SimpleFontData.h"
 #include "SkFontHost.h"
 #include "SkPaint.h"
@@ -46,6 +48,7 @@ namespace WebCore {
 
 #define NO_BREAK_SPACE_UNICHAR 0xA0
 
+#ifdef SUPPORT_COMPLEX_SCRIPTS
 static HB_Error substituteWithVerticalGlyphs(const FontPlatformData& platformData, uint16_t* glyphs, unsigned bufferLength)
 {
     HB_FaceRec_* hbFace = platformData.harfbuzzFace();
@@ -81,6 +84,7 @@ static HB_Error substituteWithVerticalGlyphs(const FontPlatformData& platformDat
     }
     return error;
 }
+#endif
 
 static void convertToVerticalForms(UChar* src, UChar* dest, unsigned bufferLength) {
     for (unsigned i = 0; i < bufferLength; ++i) {
@@ -96,7 +100,7 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
         SkDebugf("%s last char is high-surrogate", __FUNCTION__);
         return false;
     }
-    
+
     SkPaint paint;
     fontData->platformData().setupPaint(&paint);
     paint.setTextEncoding(SkPaint::kUTF16_TextEncoding);
@@ -118,6 +122,7 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
         return false;
     }
 
+#ifdef SUPPORT_COMPLEX_SCRIPTS
     if (fontData->hasVerticalGlyphs()) {
         bool lookVariants = false;
         for (unsigned i = 0; i < bufferLength; ++i) {
@@ -140,6 +145,7 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
             }
         }
     }
+#endif
 
     unsigned allGlyphs = 0; // track if any of the glyphIDs are non-zero
 

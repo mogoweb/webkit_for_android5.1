@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2008, 2009 Google Inc. All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above
@@ -14,7 +14,7 @@
  *     * Neither the name of Google Inc. nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -32,7 +32,9 @@
 #include "GlyphPageTreeNode.h"
 
 #include "Font.h"
+#ifdef SUPPORT_COMPLEX_SCRIPTS
 #include "HarfbuzzSkia.h"
+#endif
 #include "SimpleFontData.h"
 
 #include "SkTemplates.h"
@@ -41,6 +43,7 @@
 
 namespace WebCore {
 
+#ifdef SUPPORT_COMPLEX_SCRIPTS
 static int substituteWithVerticalGlyphs(const SimpleFontData* fontData, uint16_t* glyphs, unsigned bufferLength)
 {
     HB_FaceRec_* hbFace = fontData->platformData().harfbuzzFace();
@@ -70,6 +73,7 @@ static int substituteWithVerticalGlyphs(const SimpleFontData* fontData, uint16_t
     }
     return error;
 }
+#endif
 
 bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned bufferLength, const SimpleFontData* fontData)
 {
@@ -77,11 +81,11 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
         SkDebugf("%s last char is high-surrogate", __FUNCTION__);
         return false;
     }
-    
+
     SkPaint paint;
     fontData->platformData().setupPaint(&paint);
     paint.setTextEncoding(SkPaint::kUTF16_TextEncoding);
-    
+
     SkAutoSTMalloc <GlyphPage::size, uint16_t> glyphStorage(length);
     uint16_t* glyphs = glyphStorage.get();
     // textToGlyphs takes a byte count, not a glyph count so we multiply by two.
@@ -91,6 +95,7 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
         return false;
     }
 
+#ifdef SUPPORT_COMPLEX_SCRIPTS
     if (fontData->hasVerticalGlyphs()) {
         bool lookVariants = false;
         for (unsigned i = 0; i < bufferLength; ++i) {
@@ -102,6 +107,7 @@ bool GlyphPage::fill(unsigned offset, unsigned length, UChar* buffer, unsigned b
         if (lookVariants)
             substituteWithVerticalGlyphs(fontData, glyphs, bufferLength);
     }
+#endif
 
     unsigned allGlyphs = 0; // track if any of the glyphIDs are non-zero
     for (unsigned i = 0; i < length; i++) {

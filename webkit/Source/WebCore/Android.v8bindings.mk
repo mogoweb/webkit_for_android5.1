@@ -211,5 +211,7 @@ LOCAL_SRC_FILES += \
 	bindings/v8/custom/V8CustomXPathNSResolver.cpp
 
 # For XSLT.
+ifeq ($(ENABLE_XSLT),true)
 LOCAL_SRC_FILES += \
 	bindings/v8/custom/V8XSLTProcessorCustom.cpp
+endif

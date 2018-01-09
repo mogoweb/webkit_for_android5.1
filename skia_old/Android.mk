@@ -506,7 +506,7 @@ LOCAL_EXPORT_C_INCLUDES := \
 
 LOCAL_MODULE:= libskia_old
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)
 
 #############################################################
 # Build the old giflib from Android 4.3
@@ -529,4 +529,4 @@ include $(BASE_PATH)/third_party/giflib/Android.mk
 #############################################################
 # Build the legacy skia library for playback of saved webpages
 #
-include $(BASE_PATH)/legacy/Android.mk
+#include $(BASE_PATH)/legacy/Android.mk

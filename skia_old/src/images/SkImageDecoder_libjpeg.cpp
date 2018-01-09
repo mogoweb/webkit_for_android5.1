@@ -345,9 +345,9 @@ bool SkJPEGImageDecoder::onDecode(SkStream* stream, SkBitmap* bm, Mode mode) {
        a significant performance boost.
     */
     if (sampleSize == 1 &&
-        ((config == SkBitmap::kARGB_8888_Config && 
+        ((config == SkBitmap::kARGB_8888_Config &&
                 cinfo.out_color_space == JCS_RGBA_8888) ||
-        (config == SkBitmap::kRGB_565_Config && 
+        (config == SkBitmap::kRGB_565_Config &&
                 cinfo.out_color_space == JCS_RGB_565)))
     {
         bm->lockPixels();
@@ -375,7 +375,7 @@ bool SkJPEGImageDecoder::onDecode(SkStream* stream, SkBitmap* bm, Mode mode) {
         SkAutoLockPixels alp(*bm);
         rowptr = (JSAMPLE*)bm->getPixels();
         INT32 const bpr =  bm->rowBytes();
-        
+
         while (cinfo.output_scanline < cinfo.output_height) {
             int row_count = jpeg_read_scanlines(&cinfo, &rowptr, 1);
             // if row_count == 0, then we didn't get a scanline, so abort.
@@ -395,7 +395,7 @@ bool SkJPEGImageDecoder::onDecode(SkStream* stream, SkBitmap* bm, Mode mode) {
         return true;
     }
 #endif
-    
+
     // check for supported formats
     SkScaledBitmapSampler::SrcConfig sc;
     if (JCS_CMYK == cinfo.out_color_space) {
@@ -444,7 +444,7 @@ bool SkJPEGImageDecoder::onDecode(SkStream* stream, SkBitmap* bm, Mode mode) {
         return true;
     }
 
-    SkAutoLockPixels alp(*bm);                          
+    SkAutoLockPixels alp(*bm);
     if (!sampler.begin(bm, sc, this->getDitherImage())) {
         return return_false(cinfo, *bm, "sampler.begin");
     }
@@ -1053,3 +1053,5 @@ static SkImageEncoder* sk_libjpeg_efactory(SkImageEncoder::Type t) {
 
 static SkTRegistry<SkImageDecoder*, SkStream*> gDReg(sk_libjpeg_dfactory);
 static SkTRegistry<SkImageEncoder*, SkImageEncoder::Type> gEReg(sk_libjpeg_efactory);
+
+bool make_sure_jpeg_registered() { return true; }
