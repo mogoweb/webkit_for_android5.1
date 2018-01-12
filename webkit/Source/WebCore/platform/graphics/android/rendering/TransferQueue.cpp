@@ -147,6 +147,7 @@ void TransferQueue::initGLResources(int width, int height)
         int extraBuffersNeeded = 0;
         m_ANW->query(m_ANW.get(), NATIVE_WINDOW_MIN_UNDEQUEUED_BUFFERS,
                      &extraBuffersNeeded);
+        native_window_set_buffer_count(m_ANW.get(), m_transferQueueSize + extraBuffersNeeded);
 
         int result = native_window_set_buffers_geometry(m_ANW.get(),
                 width, height, HAL_PIXEL_FORMAT_RGBA_8888);
